@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Register
+    
+  
+{% endblock %}
+
+{% block body %}
+  {% for flash_error in app.flashes('verify_email_error') %}
+    <div class="alert alert-danger" role="alert">
+      {{ flash_error }}
+    </div>
+  {% endfor %}
+
+  <div id="layoutAuthentication">
+    <div id="layoutAuthentication_content">
+      <main>
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-7">
+              <div class="card shadow-lg border-0 rounded-lg mt-5">
+                <div class="card-header">
+                  <h3 class="text-center font-weight-light my-4">
+                    Create Account
+                                                                            
+                                      
+                  </h3>
+                </div>
+                <div class="card-body">
+                  <form action="{{ path('app_register') }}" method="post">
+                    <div class="form-floating mb-3">
+                        <input class="form-control" id="registration_form_name" name="registration_form[name]" placeholder="Name" />
+                        <label class="required" for="registration_form_name">Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" id="registration_form_email" name="registration_form[email]" placeholder="name@example.com" />
+                        <label for="registration_form_email">Email</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" type="password" id="registration_form_plainPassword" name="registration_form[plainPassword]" placeholder="Password" />
+                        <label for="registration_form_plainPassword">Password</label>
+                    </div>
+                    <div class="mt-4 mb-0">
+                      <div class="d-grid">
+                        <a type="submit" class="btn btn-primary btn-block">Register</a>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                  <div class="small">
+                    <a href="{{ path('app_login') }}">Have an account? Go to login</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+{% endblock %}

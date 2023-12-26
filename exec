@@ -1,0 +1,19 @@
+#!/bin/bash
+
+DC="docker compose"
+DC_EXEC="$DC exec -it"
+DC_PHP="$DC_EXEC php"
+
+case $1 in
+  'cs') $DC_PHP vendor/bin/php-cs-fixer fix;;
+  'stan') $DC_PHP vendor/bin/phpstan;;
+  'migrate') $DC_PHP bin/console doctrine:migrations:migrate --no-interaction;;
+  'seed') $DC_PHP bin/console doctrine:fixtures:load --no-interaction;;
+  'shell') $DC_PHP /bin/sh ;;
+  'console') shift; $DC_PHP bin/console "$@";;
+  'composer') shift; $DC_PHP composer "$@";;
+  'start') shift; $DC up -d ;;
+  'stop') shift; $DC down ;;
+  'restart') shift; $DC down &&$DC up -d ;;
+  *) $DC_PHP "$@";;
+esac

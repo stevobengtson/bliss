@@ -1,16 +1,7 @@
-
-<div class="sb-sidenav-menu-heading" data-bs-toggle="collapse" data-bs-target="#collapseBudget">
-    <div class="sb-sidenav-collapse-arrow">
-        <i class="fas fa-angle-down"></i>
-    </div>
-    Budget
-</div>
-<div id="collapseBudget">
-    <nav class="sb-sidenav-menu-nested nav">
-        {% for account in this.accounts %}
-        <a class="nav-link" href="{{ path('app_transaction', {id: account.id}) }}">
-            {{ account.nickName }}
-        </a>
-        {% endfor %}
-    </nav>
-</div>
+{% for account in this.accounts %}
+<li>
+    <a href="{{ path('app_account_transactions', {id: account.id}) }}" class="nav-link text-white">
+        {{ account.nickName }}
+    </a>
+</li>
+{% endfor %}

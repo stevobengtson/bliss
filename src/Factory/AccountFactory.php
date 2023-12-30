@@ -63,7 +63,7 @@ final class AccountFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'nickName' => self::faker()->text(255),
+            'nickName' => self::faker()->word(),
             'type' => self::faker()->numberBetween(1, 32767),
             'owner' => UserFactory::createOne(),
         ];

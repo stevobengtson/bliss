@@ -64,14 +64,17 @@ final class TransactionFactory extends ModelFactory
     {
         $defaults = [
             'account' => AccountFactory::new(),
+            'memo' => self::faker()->sentence(),
             'credit' => 0,
             'debit' => 0,
-            'enteredDate' => self::faker()->dateTime(),
+            'enteredDate' => self::faker()->dateTimeBetween('-1 year'),
+            'category' => CategoryFactory::new(),
+            'payee' => PayeeFactory::new(),
         ];
 
         // We only want a credit or a debit not both
         $valueProperty = self::faker()->randomElement(['credit', 'debit']);
-        $defaults[$valueProperty] = self::faker()->randomNumber();
+        $defaults[$valueProperty] = self::faker()->numberBetween(-5000, 5000);
 
         return $defaults;
     }

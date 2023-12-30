@@ -6,7 +6,6 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -18,13 +17,7 @@ use Symfony\Component\Uid\Ulid;
 #[ORM\HasLifecycleCallbacks]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    use TrackedEntity;
-
-    #[ORM\Id]
-    #[ORM\Column(type: UlidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.ulid_generator')]
-    private ?Ulid $id;
+    use BaseEntity;
 
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
@@ -52,15 +45,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Account::class, orphanRemoval: true)]
     private Collection $accounts;
 
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: CategoryGroup::class, orphanRemoval: true)]
+    private Collection $categoryGroups;
+
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Payee::class, orphanRemoval: true)]
+    private Collection $payees;
+
     public function __construct()
     {
         $this->id = new Ulid();
         $this->accounts = new ArrayCollection();
-    }
-
-    public function getId(): ?Ulid
-    {
-        return $this->id;
+        $this->categoryGroups = new ArrayCollection();
+        $this->payees = new ArrayCollection();
     }
 
     public function getEmail(): ?string
@@ -178,6 +174,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($account->getOwner() === $this) {
                 $account->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CategoryGroup>
+     */
+    public function getCategoryGroups(): Collection
+    {
+        return $this->categoryGroups;
+    }
+
+    public function addCategoryGroup(CategoryGroup $categoryGroup): static
+    {
+        if (!$this->categoryGroups->contains($categoryGroup)) {
+            $this->categoryGroups->add($categoryGroup);
+            $categoryGroup->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategoryGroup(CategoryGroup $categoryGroup): static
+    {
+        if ($this->categoryGroups->removeElement($categoryGroup)) {
+            // set the owning side to null (unless already changed)
+            if ($categoryGroup->getOwner() === $this) {
+                $categoryGroup->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Payee>
+     */
+    public function getPayees(): Collection
+    {
+        return $this->payees;
+    }
+
+    public function addPayee(Payee $payee): static
+    {
+        if (!$this->payees->contains($payee)) {
+            $this->payees->add($payee);
+            $payee->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removePayee(Payee $payee): static
+    {
+        if ($this->payees->removeElement($payee)) {
+            // set the owning side to null (unless already changed)
+            if ($payee->getOwner() === $this) {
+                $payee->setOwner(null);
             }
         }
 

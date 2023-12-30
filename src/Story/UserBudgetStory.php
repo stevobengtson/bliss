@@ -2,8 +2,12 @@
 
 namespace App\Story;
 
+use App\Entity\Category;
 use App\Enums\AccountType;
 use App\Factory\AccountFactory;
+use App\Factory\CategoryFactory;
+use App\Factory\CategoryGroupFactory;
+use App\Factory\PayeeFactory;
 use App\Factory\TransactionFactory;
 use App\Factory\UserFactory;
 use Zenstruck\Foundry\Story;
@@ -47,9 +51,24 @@ final class UserBudgetStory extends Story
             'owner' => $owner,
         ]);
 
-        TransactionFactory::createMany(100, function (int $index) {
+        CategoryGroupFactory::createMany(10, [
+            'owner' => $owner,
+        ]);
+
+        CategoryFactory::createMany(25, [
+            'categoryGroup' => CategoryGroupFactory::random()->disableAutoRefresh(),
+        ]);
+
+        PayeeFactory::createMany(100, [
+            'owner' => $owner,
+            'autoCategory' => CategoryFactory::random(),
+        ]);
+
+        TransactionFactory::createMany(500, function (int $index) {
             return [
                 'account' => AccountFactory::random()->disableAutoRefresh(),
+                'category' => CategoryFactory::random()->disableAutoRefresh(),
+                'payee' => PayeeFactory::random()->disableAutoRefresh(),
             ];
         });
 

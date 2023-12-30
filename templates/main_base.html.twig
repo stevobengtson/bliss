@@ -1,64 +1,50 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	<nav
-		class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-		<!-- Navbar Brand-->
-		<a class="navbar-brand ps-3" href="index.html">Budget</a>
-		<!-- Sidebar Toggle-->
-		<button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!">
-			<i class="fas fa-bars"></i>
-		</button>x
-		<!-- Navbar User Dropdown -->
-		<ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-					<i class="fas fa-user fa-fw"></i>
+	<div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px;">
+		<a href="{{ path('app_home') }}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+			<svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+			<span class="fs-4">Budget</span>
+		</a>
+		<hr>
+		<ul class="nav nav-pills flex-column mb-auto">
+			<li>
+				<a href="#" class="nav-link text-white">
+					<svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"></use></svg>
+					Budget
 				</a>
-				<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-					<li><a class="dropdown-item" href="#!">Settings</a></li>
-					<li><a class="dropdown-item" href="#!">Activity Log</a></li>
-					<li><hr class="dropdown-divider"/></li>
-					<li><a class="dropdown-item" href="{{ path('app_register') }}">Register</a></li>
-					<li><a class="dropdown-item" href="{{ path('app_logout') }}">Logout</a></li>
-				</ul>
 			</li>
+			<li>
+				<a href="#" class="nav-link text-white">
+					<svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
+					Reports
+				</a>
+			</li>
+			<li>
+				<a href="#" class="nav-link text-white border-bottom">
+					<svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"></use></svg>
+					All Accounts
+				</a>
+			</li>
+			<!-- List of accounts -->
+			<twig:AccountSideMenu />
 		</ul>
-	</nav>
-	<div id="layoutSidenav">
-		<div id="layoutSidenav_nav">
-			<nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-				<div class="sb-sidenav-menu">
-					<div class="nav">
-						<a class="nav-link" href="{{ path('app_home') }}">
-							<div class="sb-nav-link-icon">
-								<i class="fas fa-hand-holding-dollar"></i>
-							</div>
-							Budget
-						</a>
-						<a class="nav-link" href="{{ path('app_home') }}">
-							<div class="sb-nav-link-icon">
-								<i class="fas fa-money-bill-trend-up"></i>
-							</div>
-							Reports
-						</a>
-						<a class="nav-link" href="{{ path('app_home') }}">
-							<div class="sb-nav-link-icon">
-								<i class="fas fa-money-bills"></i>
-							</div>
-							All Accounts
-						</a>
-						<twig:AccountSideMenu />
-					</div>
-				</div>
-			</nav>
+		<hr>
+		<div class="dropdown">
+			<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+				<i class="bi bi-person-circle flex-grow-0"></i>
+				<strong>mdo</strong>
+			</a>
+			<ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+				<li><a class="dropdown-item" href="#">New project...</a></li>
+				<li><a class="dropdown-item" href="#">Settings</a></li>
+				<li><a class="dropdown-item" href="#">Profile</a></li>
+				<li><hr class="dropdown-divider"></li>
+				<li><a class="dropdown-item" href="#">Sign out</a></li>
+			</ul>
 		</div>
-		<div id="layoutSidenav_content">
-			<main>
-				<div class="container-fluid px-4">
-					{% block content %}{% endblock %}
-				</div>
-			</main>
-		</div>
+	</div>
+	<div class="container-fluid px-4">
+		{% block content %}{% endblock %}
 	</div>
 {% endblock %}

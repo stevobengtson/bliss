@@ -1,0 +1,11 @@
+{% for transaction in transactions %}
+    <tr>
+        <td>{{ transaction.enteredDate|date("m/d/Y") }}</td>
+        <td>{{ transaction.payee.name|u.truncate(50, '...') }}</td>
+        <td>{{ transaction.category.name|u.truncate(50, '...') }}</td>
+        <td>{{ transaction.memo|u.truncate(50, '...') }}</td>
+        <td>{{ transaction.credit|format_currency('USD') }}</td>
+        <td>{{ transaction.debit|format_currency('USD') }}</td>
+        <td>--</td>
+    </tr>
+{% endfor %}

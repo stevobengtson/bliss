@@ -5,20 +5,12 @@ namespace App\Entity;
 use App\Repository\TransactionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Types\UlidType;
-use Symfony\Component\Uid\Ulid;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Transaction
 {
-    use TrackedEntity;
-
-    #[ORM\Id]
-    #[ORM\Column(type: UlidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.ulid_generator')]
-    private ?Ulid $id;
+    use BaseEntity;
 
     #[ORM\ManyToOne(inversedBy: 'transactions')]
     #[ORM\JoinColumn(nullable: false)]
@@ -39,15 +31,11 @@ class Transaction
     #[ORM\Column(type: Types::BIGINT, nullable: false, options: ['default' => 0])]
     private string $debit = '0';
 
-    public function __construct()
-    {
-        $this->id = new Ulid();
-    }
+    #[ORM\ManyToOne(inversedBy: 'transactions')]
+    private ?Category $category = null;
 
-    public function getId(): ?Ulid
-    {
-        return $this->id;
-    }
+    #[ORM\ManyToOne(inversedBy: 'transactions')]
+    private ?Payee $payee = null;
 
     public function getAccount(): ?Account
     {
@@ -117,6 +105,30 @@ class Transaction
     public function setDebit(string $debit): static
     {
         $this->debit = $debit;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getPayee(): ?Payee
+    {
+        return $this->payee;
+    }
+
+    public function setPayee(?Payee $payee): static
+    {
+        $this->payee = $payee;
 
         return $this;
     }

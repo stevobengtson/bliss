@@ -8,20 +8,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Component\Uid\Ulid;
 
 #[ORM\Entity(repositoryClass: AccountRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Account
 {
-    use TrackedEntity;
-
-    #[ORM\Id]
-    #[ORM\Column(type: UlidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.ulid_generator')]
-    private ?Ulid $id;
+    use BaseEntity;
 
     #[ORM\Column(length: 255, nullable: false)]
     private ?string $nickName = null;
@@ -58,11 +51,6 @@ class Account
     {
         $this->id = new Ulid();
         $this->transactions = new ArrayCollection();
-    }
-
-    public function getId(): ?Ulid
-    {
-        return $this->id;
     }
 
     public function getNickName(): ?string

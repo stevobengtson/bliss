@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Account;
 use App\Repository\TransactionRepository;
+use App\Twig\Components\Pagination;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
@@ -18,27 +19,13 @@ class TransactionController extends AbstractController
     public function index(
         Account $account,
         #[MapQueryParameter] int $page = 1,
-        #[MapQueryParameter] int $perPage = 10,
-        #[MapQueryParameter] bool $listOnly = false
+        #[MapQueryParameter] int $perPage = 10
     ): Response {
         $criteria = ['account' => $account];
-        $maxPages = $this->transactionRepository->count($criteria) / $perPage;
-        $transactions = $this->transactionRepository->findBy(
-            $criteria,
-            ['enteredDate' => 'desc'],
-            $perPage,
-            (($page - 1) * $perPage)
-        );
-
-        if ($listOnly) {
-            return $this->render('transaction/_list.html.twig', [
-                'transactions' => $transactions,
-            ]);
-        }
+        $maxPages = round($this->transactionRepository->count($criteria) / $perPage, 0, PHP_ROUND_HALF_DOWN);
 
         return $this->render('transaction/index.html.twig', [
             'account' => $account,
-            'transactions' => $transactions,
             'page' => $page,
             'perPage' => $perPage,
             'maxPages' => $maxPages,

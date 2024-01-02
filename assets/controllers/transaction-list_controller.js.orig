@@ -1,0 +1,28 @@
+import { Controller } from '@hotwired/stimulus';
+import { useDispatch } from 'stimulus-use';
+
+export default class extends Controller {
+    static targets = ['transaction-list']
+    static values = {
+        accountId: String
+    }
+
+    connect() {
+        useDispatch(this, { debug: true });
+    }
+
+    async reload(event){
+        return this.loadTransactions();
+    }
+
+    async loadTransactions(page, perPage) {
+        const params = new URLSearchParams({
+            page,
+            perPage,
+            listOnly: true
+        });
+
+        const response = await fetch(`/accounts/${this.accountIdValue}/transactions?${params.toString()}`);
+        this.transactionListTarget.innerHTML = await response.text();
+    }
+}

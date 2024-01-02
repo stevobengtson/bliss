@@ -12,7 +12,8 @@ services:
     environment:
       APP_ENV: dev
       # See https://xdebug.org/docs/all_settings#mode
-      XDEBUG_MODE: "${XDEBUG_MODE:-develop,coverage,debug,profile,trace,gcstats}"
+      XDEBUG_MODE: ""
+      RR_CONFIG: ".rr.dev.yaml"
     extra_hosts:
       # Ensure that host.docker.internal is correctly defined on Linux
       - host.docker.internal:host-gateway

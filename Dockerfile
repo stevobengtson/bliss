@@ -88,7 +88,6 @@ FROM base AS dev
 ENV APP_ENV=dev
 ENV RR_CONFIG=.rr.dev.yaml
 
-COPY docker/dev/app/entry.d/* /app/entry.d/
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
 RUN set -eux; \

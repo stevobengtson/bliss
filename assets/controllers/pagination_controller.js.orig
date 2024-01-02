@@ -1,0 +1,50 @@
+import { Controller } from '@hotwired/stimulus';
+import { useDispatch } from 'stimulus-use';
+
+export default class extends Controller {
+    static targets = ['paginator'];
+    static values = {
+        loadUrl: String,
+        currentPage: Number,
+        maxPages: Number,
+        pageSize: Number,
+        maxPageLinks: Number
+    };
+
+    connect() {
+        // Used to dispatch message when page changes
+        useDispatch(this, { debug: true });
+    }
+
+    selectPage(event) {
+        console.log('Loading page',  event);
+    }
+
+    async reload(event) {
+        this.currentPageValue = event.data.currentPageValue;
+        this.maxPagesValue = event.data.maxPagesValue;
+        this.pageSizeValue = event.data.pageSizeValue;
+
+        return this.loadPagination();
+    }
+
+    async loadPagination(){
+        const params = new URLSearchParams({
+            loadUrl: this.loadUrlValue,
+            currentPage: this.currentPageValue,
+            maxPages: this.maxPagesValue,
+            pageSize: this.pageSizeValue,
+            maxPageLinks: this.maxPageLinksValue
+        });
+
+        this.dispatch('loadPage', {
+            currentPage: this.currentPageValue,
+            maxPages: this.maxPagesValue,
+            pageSize: this.pageSizeValue,
+            maxPageLinks: this.maxPageLinksValue
+        })
+
+        const response = await fetch(`/components/pagination?${params.toString()}`);
+        this.paginatorTarget.innerHTML = await response.text();
+    }
+}

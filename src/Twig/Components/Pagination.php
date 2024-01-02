@@ -2,18 +2,52 @@
 
 namespace App\Twig\Components;
 
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
+use Symfony\UX\LiveComponent\Attribute\LiveArg;
+use Symfony\UX\LiveComponent\Attribute\LiveProp;
+use Symfony\UX\LiveComponent\ComponentToolsTrait;
+use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsTwigComponent]
+#[AsLiveComponent]
 class Pagination
 {
+    use DefaultActionTrait;
+    use ComponentToolsTrait;
+
+    #[LiveProp(writable: true)]
     public int $currentPage = 1;
+
+    #[LiveProp]
     public int $pageSize = 10;
+
+    #[LiveProp]
     public int $maxPages = 1;
-    public string $loadUrl;
+
+    #[LiveProp]
     public string $pageParamName = 'page';
+
+    #[LiveProp]
     public string $perPageParamName = 'perPage';
+
+    #[LiveProp]
     public int $maxPageLinks = 10;
+
+    #[LiveProp]
+    public string $ellipsesText = '...';
+
+    #[LiveProp]
+    public string $previousText = 'Previous';
+
+    #[LiveProp]
+    public string $nextText = 'Next';
+
+    #[LiveAction]
+    public function pageSelect(#[LiveArg] int $page): void
+    {
+        $this->currentPage = $page;
+        $this->emit("paginationPageSelect", ['page' => $page]);
+    }
 
     /**
      * @return array{
@@ -27,57 +61,66 @@ class Pagination
     {
         $pageArray = [];
 
-        if ($this->maxPages > $this->maxPageLinks) {
-            // First link
-            $pageArray[] = $this->createPaginationItem(
-                1,
-                'First',
-                false,
-                $this->currentPage === 1
-            );
-        }
+        // Ensure the current page is in the range of valid pages
+        $currentPage = max(1, min($this->currentPage, $this->maxPages));
 
         // Previous link
-        $pageArray[] = $this->createPaginationItem(
-            $this->currentPage - 1,
-            'Previous',
-            false,
-            $this->currentPage === 1
-        );
+        $pageArray[] = $this->createPaginationItem($currentPage - 1, $this->previousText, false, $currentPage === 1);
+
+        // First page link
+        $pageArray[] = $this->createPaginationItem(1, '1', $currentPage === 1, false);
+
 
         // All the individual page links
-        for ($i = 1; $i <= $this->maxPages && $i <= $this->maxPageLinks; $i++) {
+        $startPageLink = $this->getStartPageLink($currentPage);
+        $endPageLink = $this->getEndPageLink($currentPage);
+
+        if ($startPageLink > 2) {
+            $pageArray[] = $this->createPaginationItem(0, $this->ellipsesText, false, true);
+        }
+
+        for ($i = $startPageLink; $i <= $endPageLink; $i++) {
             $pageArray[] = $this->createPaginationItem($i);
         }
 
-        if ($this->maxPages > $this->maxPageLinks) {
-            // Add a ... for more pages
-            $pageArray[] = $this->createPaginationItem(
-                0,
-                '...',
-                false,
-                true);
+        if ($endPageLink < $this->maxPages - 1) {
+            $pageArray[] = $this->createPaginationItem(0, $this->ellipsesText, $currentPage === $this->maxPages, true);
         }
+
+        // Last page link
+        $pageArray[] = $this->createPaginationItem($this->maxPages, $this->maxPages, $currentPage === $this->maxPages, false);
 
         // Next link
-        $pageArray[] = $this->createPaginationItem(
-            $this->currentPage + 1,
-            'Next',
-            false,
-            $this->currentPage === $this->maxPages
-        );
-
-        if ($this->maxPages > $this->maxPageLinks) {
-            // Last link
-            $pageArray[] = $this->createPaginationItem(
-                $this->maxPages,
-                'Last',
-                false,
-                $this->currentPage === $this->maxPages
-            );
-        }
+        $pageArray[] = $this->createPaginationItem($currentPage + 1, $this->nextText, false, $currentPage === $this->maxPages);
 
         return $pageArray;
+    }
+
+    private function getStartPageLink(int $currentPage = 1): int
+    {
+        $startPageLink = 2;
+        if ($currentPage > 4) {
+            $startPageLink = $currentPage - 2;
+        }
+        if ($currentPage > $this->maxPages - 4) {
+            $startPageLink = $this->maxPages - 6;
+        }
+
+        return $startPageLink;
+    }
+
+    private function getEndPageLink(int $currentPage = 10): int
+    {
+        $endPageLink = 7;
+        if ($currentPage > 4) {
+            $endPageLink = $currentPage + 2;
+        }
+
+        if ($currentPage > $this->maxPages - 5) {
+            $endPageLink = $this->maxPages - 1;
+        }
+
+        return $endPageLink;
     }
 
     /**
@@ -102,8 +145,8 @@ class Pagination
             $this->perPageParamName => $this->pageSize,
         ];
         return [
+            'page' => $page,
             'display' => $display ?? $page,
-            'link' => $this->loadUrl . '?' . http_build_query($queryParams),
             'active' => $active ?? $page === $this->currentPage,
             'disabled' => $disabled,
         ];

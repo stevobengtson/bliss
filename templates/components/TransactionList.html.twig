@@ -1,4 +1,5 @@
-{% for transaction in transactions %}
+<tbody {{ attributes }}>
+{% for transaction in this.transactions %}
     <tr>
         <td>{{ transaction.enteredDate|date("m/d/Y") }}</td>
         <td>{{ transaction.payee.name|u.truncate(50, '...') }}</td>
@@ -9,3 +10,4 @@
         <td>--</td>
     </tr>
 {% endfor %}
+</tbody>

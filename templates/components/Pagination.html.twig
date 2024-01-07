@@ -2,10 +2,7 @@
     <ul class="pagination">
         {% for page in this.pages %}
         <li class="page-item{{ page.active ? ' active' : '' }}{{ page.disabled ? ' disabled' : '' }}">
-            <button class="page-link"
-               data-action="live#action"
-               data-action-name="prevent|debounce(300)|pageSelect(page={{ page.page }})"
-            >{{ page.display }}</button>
+            <a class="page-link" href="{{ page.link }}">{{ page.display }}</a>
         </li>
         {% endfor %}
     </ul>

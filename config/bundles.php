@@ -14,7 +14,6 @@ return [
     Symfony\UX\StimulusBundle\StimulusBundle::class => ['all' => true],
     Zenstruck\Foundry\ZenstruckFoundryBundle::class => ['dev' => true, 'test' => true],
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
-    Baldinof\RoadRunnerBundle\BaldinofRoadRunnerBundle::class => ['all' => true],
     Symfony\UX\TogglePassword\TogglePasswordBundle::class => ['all' => true],
     Symfony\UX\TwigComponent\TwigComponentBundle::class => ['all' => true],
     Symfony\UX\LiveComponent\LiveComponentBundle::class => ['all' => true],

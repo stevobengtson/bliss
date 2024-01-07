@@ -33,7 +33,3 @@ phpstan.neon
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
-
-###> baldinof/roadrunner-bundle ###
-/bin/rr
-###< baldinof/roadrunner-bundle ###

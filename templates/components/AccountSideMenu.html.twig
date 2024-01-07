@@ -1,6 +1,6 @@
 {% for account in this.accounts %}
 <li>
-    <a href="{{ path('app_account_transactions', {id: account.id}) }}" class="nav-link text-white">
+    <a href="{{ path('app_account_transaction_index', {id: account.id}) }}" class="nav-link text-white">
         {{ account.nickName }}
     </a>
 </li>

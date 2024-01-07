@@ -1,29 +1,24 @@
-{% extends 'main_base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}{{ account.nickName }}{% endblock %}
 
-{% block content %}
+{% block body %}
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">{{ account.nickName }}</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="navbar-brand">{{ account.nickName }}</div>
+            <div>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <twig:TransactionAddModel accountUuid="{{ account.id.toRfc4122 }}"/>
+                        <button class="btn btn-outline-success">
+                            <i class="bi bi-plus"></i>
+                            Add Transaction
+                        </button>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
             </div>
         </div>
     </nav>
+
     <table class="table table-responsive table-striped table-hover table-sm">
         <thead>
         <tr>
@@ -34,11 +29,32 @@
             <th>Credit</th>
             <th>Debit</th>
             <th>Balance</th>
+            <th>actions</th>
         </tr>
         </thead>
-        <twig:TransactionList account="{{ account }}" currentPage="{{ page }}" perPage="{{ perPage }}"/>
+        <tbody>
+        {% for transaction in transactions.members %}
+            <tr>
+                <td>{{ transaction.enteredDate|date("m/d/Y") }}</td>
+                <td>{{ transaction.payee.name|u.truncate(50, '...') }}</td>
+                <td>{{ transaction.category.name|u.truncate(50, '...') }}</td>
+                <td>{{ transaction.memo|u.truncate(50, '...') }}</td>
+                <td>{{ transaction.credit|format_currency('USD') }}</td>
+                <td>{{ transaction.debit|format_currency('USD') }}</td>
+                <td>$0.00</td>
+                <td>--</td>
+            </tr>
+        {% endfor %}
+        </tbody>
     </table>
+    {% if transactions.pages > 1 %}
     <div class="float-end">
-        <twig:Pagination currentPage="{{ page }}" maxPages="{{ maxPages }}" pageSize="{{ perPage }}"/>
+        <twig:Pagination
+                currentPage="{{ transactions.page }}"
+                pageSize="{{ transactions.itemsPerPage }}"
+                maxPages="{{ transactions.pages }}"
+                baseUrlLink="{{ path('app_account_transaction_index', {'id': account.id}) }}"
+        />
     </div>
+    {% endif %}
 {% endblock %}

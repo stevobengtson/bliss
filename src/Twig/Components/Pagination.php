@@ -2,14 +2,13 @@
 
 namespace App\Twig\Components;
 
-use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
-use Symfony\UX\LiveComponent\Attribute\LiveAction;
-use Symfony\UX\LiveComponent\Attribute\LiveArg;
+use App\Service\HTTPHelper;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsLiveComponent]
+#[AsTwigComponent]
 class Pagination
 {
     use DefaultActionTrait;
@@ -23,6 +22,9 @@ class Pagination
 
     #[LiveProp]
     public int $maxPages = 1;
+
+    #[LiveProp]
+    public int $totalItems = 0;
 
     #[LiveProp]
     public string $pageParamName = 'page';
@@ -42,12 +44,8 @@ class Pagination
     #[LiveProp]
     public string $nextText = 'Next';
 
-    #[LiveAction]
-    public function pageSelect(#[LiveArg] int $page): void
-    {
-        $this->currentPage = $page;
-        $this->emit("paginationPageSelect", ['page' => $page]);
-    }
+    #[LiveProp]
+    public string $baseUrlLink = '';
 
     /**
      * @return array{
@@ -61,15 +59,16 @@ class Pagination
     {
         $pageArray = [];
 
+        $maxPages = intval(ceil($this->totalItems / $this->pageSize));
+
         // Ensure the current page is in the range of valid pages
-        $currentPage = max(1, min($this->currentPage, $this->maxPages));
+        $currentPage = max(1, min($this->currentPage, $maxPages));
 
         // Previous link
-        $pageArray[] = $this->createPaginationItem($currentPage - 1, $this->previousText, false, $currentPage === 1);
+        $pageArray[] = $this->createPaginationItem($currentPage - 1, $this->previousText, false, 1 === $currentPage);
 
         // First page link
-        $pageArray[] = $this->createPaginationItem(1, '1', $currentPage === 1, false);
-
+        $pageArray[] = $this->createPaginationItem(1, '1', 1 === $currentPage, false);
 
         // All the individual page links
         $startPageLink = $this->getStartPageLink($currentPage);
@@ -79,19 +78,19 @@ class Pagination
             $pageArray[] = $this->createPaginationItem(0, $this->ellipsesText, false, true);
         }
 
-        for ($i = $startPageLink; $i <= $endPageLink; $i++) {
+        for ($i = $startPageLink; $i <= $endPageLink; ++$i) {
             $pageArray[] = $this->createPaginationItem($i);
         }
 
         if ($endPageLink < $this->maxPages - 1) {
-            $pageArray[] = $this->createPaginationItem(0, $this->ellipsesText, $currentPage === $this->maxPages, true);
+            $pageArray[] = $this->createPaginationItem(0, $this->ellipsesText, $currentPage === $maxPages, true);
         }
 
         // Last page link
-        $pageArray[] = $this->createPaginationItem($this->maxPages, $this->maxPages, $currentPage === $this->maxPages, false);
+        $pageArray[] = $this->createPaginationItem($maxPages, $maxPages, $currentPage === $maxPages, false);
 
         // Next link
-        $pageArray[] = $this->createPaginationItem($currentPage + 1, $this->nextText, false, $currentPage === $this->maxPages);
+        $pageArray[] = $this->createPaginationItem($currentPage + 1, $this->nextText, false, $currentPage === $maxPages);
 
         return $pageArray;
     }
@@ -125,6 +124,7 @@ class Pagination
 
     /**
      * @return array{
+     *     page: int,
      *     display: int|string,
      *     link: string,
      *     active: bool,
@@ -133,20 +133,20 @@ class Pagination
      */
     private function createPaginationItem(
         int $page,
-        ?string $display = null,
-        ?bool $active = null,
+        string|int $display = null,
+        bool $active = null,
         bool $disabled = false
     ): array {
         // Ensure page is in 1 to $this->maxPages value range.
         $page = max(1, min($page, $this->maxPages));
 
-        $queryParams = [
-            $this->pageParamName => $page,
-            $this->perPageParamName => $this->pageSize,
-        ];
+        $queryParams = "{$this->pageParamName}={$page}&{$this->perPageParamName}={$this->pageSize}";
+        $url = HTTPHelper::buildUrl($this->baseUrlLink, ['query' => $queryParams], HTTPHelper::HTTP_URL_JOIN_QUERY);
+
         return [
             'page' => $page,
             'display' => $display ?? $page,
+            'link' => $url,
             'active' => $active ?? $page === $this->currentPage,
             'disabled' => $disabled,
         ];

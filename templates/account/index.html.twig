@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accounts{% endblock %}
+
+{% block body %}
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <div class="navbar-brand">Accounts</div>
+            <div>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="btn btn-outline-success" href="{{ path('app_account_new') }}">
+                            <i class="bi bi-plus"></i>
+                            Create Account
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <table class="table table-responsive table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>StartingBalance</th>
+                <th>Balance</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        {% for account in accounts.members %}
+            <tr>
+                <td>{{ account.nickName }}</td>
+                <td>{{ account.type.name }}</td>
+                <td>{{ account.startingBalance }}</td>
+                <td>{{ account.balance }}</td>
+                <td>
+                    <a href="{{ path('app_account_show', {'id': account.id}) }}"><i class="bi bi-eye"></i></a>
+                    <a href="{{ path('app_account_edit', {'id': account.id}) }}"><i class="bi bi-pencil"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">No Account created yet, create one <a href="{{ path('app_account_new') }}">here</a>.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if accounts.pages > 1 %}
+        <div class="float-end">
+            <twig:Pagination
+                    currentPage="{{ accounts.page }}"
+                    pageSize="{{ accounts.itemsPerPage }}"
+                    maxPages="{{ accounts.pages }}"
+                    baseUrlLink="{{ path('app_account_index') }}"
+            />
+        </div>
+    {% endif %}
+{% endblock %}

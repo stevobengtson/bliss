@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ account.nickName }}{% endblock %}
+
+{% block body %}
+    {% embed 'components/_card.html.twig' %}
+        {% block header_left %}
+            {{ include('components/_back_to_list.html.twig', { 'back_path': 'app_account_index'}) }}
+        {% endblock %}
+
+        {% block header_center %}
+            <h3 class="text-center font-weight-light my-4">{{ account.nickName }}</h3>
+        {% endblock %}
+
+        {% block header_right %}
+            <a href="{{ path('app_account_edit', {'id': account.id}) }}" class="btn btn-outline-primary">
+                <i class="bi bi-pencil flex-grow-0"></i>
+            </a>
+        {% endblock %}
+
+        {% block card_body %}
+
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ account.id }}</td>
+                </tr>
+                <tr>
+                    <th>Notes</th>
+                    <td>{{ account.notes }}</td>
+                </tr>
+                <tr>
+                    <th>StartingBalance</th>
+                    <td>{{ account.startingBalance|format_currency('USD') }}</td>
+                </tr>
+                <tr>
+                    <th>Balance</th>
+                    <td>{{ account.balance|format_currency('USD') }}</td>
+                </tr>
+                <tr>
+                    <th>Type</th>
+                    <td>{{ account.type.name }}</td>
+                </tr>
+                <tr>
+                    <th>ClearedBalance</th>
+                    <td>{{ account.clearedBalance|format_currency('USD') }}</td>
+                </tr>
+                <tr>
+                    <th>UnclearedBalance</th>
+                    <td>{{ account.unclearedBalance|format_currency('USD') }}</td>
+                </tr>
+                <tr>
+                    <th>CreatedAt</th>
+                    <td>{{ account.createdAt ? account.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>UpdatedAt</th>
+                    <td>{{ account.updatedAt ? account.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+                </tbody>
+            </table>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

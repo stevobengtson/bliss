@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Account{% endblock %}
+
+{% block body %}
+    {% embed 'components/_card.html.twig' %}
+        {% block header_left %}
+            {{ include('components/_back_to_list.html.twig', { 'back_path': 'app_account_index'}) }}
+        {% endblock %}
+
+        {% block header_center %}
+            <h3 class="text-center font-weight-light my-4">New Account</h3>
+        {% endblock %}
+
+        {% block card_body %}
+            {{ include('account/_form.html.twig', {'button_label': 'Create'}) }}
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

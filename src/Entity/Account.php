@@ -101,12 +101,12 @@ class Account
         return $this;
     }
 
-    public function getNotes(): string
+    public function getNotes(): ?string
     {
         return $this->notes;
     }
 
-    public function setNotes(string $notes): static
+    public function setNotes(?string $notes): static
     {
         $this->notes = $notes;
 

@@ -9,10 +9,11 @@
             <div>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <button class="btn btn-outline-success">
+                        <a class="btn btn-outline-success"
+                           href="{{ path('app_account_transaction_new', { 'id': account.id }) }}">
                             <i class="bi bi-plus"></i>
                             Add Transaction
-                        </button>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -39,22 +40,25 @@
                 <td>{{ transaction.payee.name|u.truncate(50, '...') }}</td>
                 <td>{{ transaction.category.name|u.truncate(50, '...') }}</td>
                 <td>{{ transaction.memo|u.truncate(50, '...') }}</td>
-                <td>{{ transaction.credit|format_currency('USD') }}</td>
-                <td>{{ transaction.debit|format_currency('USD') }}</td>
-                <td>$0.00</td>
+                <td>{% if transaction.credit > 0 %}{{ transaction.creditCents|format_currency('USD') }}{% endif %}</td>
+                <td>{% if transaction.debit > 0 %}{{ transaction.debitCents|format_currency('USD') }}{% endif %}</td>
                 <td>--</td>
+                <td>
+                    <a href="{{ path('app_transaction_edit', {'id': transaction.id}) }}"><i class="bi bi-pencil"></i></a>
+                    {{ include('transaction/_delete_form.twig.html.twig') }}
+                </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
     {% if transactions.pages > 1 %}
-    <div class="float-end">
-        <twig:Pagination
-                currentPage="{{ transactions.page }}"
-                pageSize="{{ transactions.itemsPerPage }}"
-                maxPages="{{ transactions.pages }}"
-                baseUrlLink="{{ path('app_account_transaction_index', {'id': account.id}) }}"
-        />
-    </div>
+        <div class="float-end">
+            <twig:Pagination
+                    currentPage="{{ transactions.page }}"
+                    pageSize="{{ transactions.itemsPerPage }}"
+                    maxPages="{{ transactions.pages }}"
+                    baseUrlLink="{{ path('app_account_transaction_index', {'id': account.id}) }}"
+            />
+        </div>
     {% endif %}
 {% endblock %}

@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Account{% endblock %}
+{% block title %}Edit Transaction{% endblock %}
 
 {% block body %}
     {% embed 'components/_card.html.twig' %}
         {% block header_left %}
-            {{ include('components/_back_to_list.html.twig', { 'back_path': path('app_account_index')}) }}
+            {{ include('components/_back_to_list.html.twig', { 'back_path': path('app_account_transaction_index', {'id': transaction.account.id})}) }}
         {% endblock %}
 
         {% block header_center %}
-            <h3 class="text-center font-weight-light my-4">Edit {{ account.nickName }}</h3>
+            <h3 class="text-center font-weight-light my-4">Edit Transaction</h3>
         {% endblock %}
 
         {% block card_body %}

@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Account;
+use App\Entity\Transaction;
 use App\Repository\TransactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -24,5 +25,17 @@ class TransactionService
         ;
 
         return $this->getPagedResults($qb, $page, $itemsPerPage);
+    }
+
+    public function saveTransaction(Transaction $transaction): void
+    {
+        $this->entityManager->persist($transaction);
+        $this->entityManager->flush();
+    }
+
+    public function removeTransaction(Transaction $transaction): void
+    {
+        $this->entityManager->remove($transaction);
+        $this->entityManager->flush();
     }
 }

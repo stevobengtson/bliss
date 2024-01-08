@@ -5,6 +5,10 @@ namespace App\Entity;
 use App\Repository\TransactionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Money\Currencies\ISOCurrencies;
+use Money\Currency;
+use Money\Formatter\IntlMoneyFormatter;
+use Money\Money;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -90,6 +94,11 @@ class Transaction
         return $this->credit;
     }
 
+    public function getCreditCents(): string
+    {
+        return strval(intval($this->credit) / 100);
+    }
+
     public function setCredit(string $credit): static
     {
         $this->credit = $credit;
@@ -100,6 +109,11 @@ class Transaction
     public function getDebit(): string
     {
         return $this->debit;
+    }
+
+    public function getDebitCents(): string
+    {
+        return strval(intval($this->debit) / 100);
     }
 
     public function setDebit(string $debit): static

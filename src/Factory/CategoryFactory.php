@@ -63,8 +63,6 @@ final class CategoryFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'activity' => self::faker()->randomNumber(),
-            'assigned' => self::faker()->randomNumber(),
             'categoryGroup' => CategoryGroupFactory::new(),
             'name' => self::faker()->word(),
         ];

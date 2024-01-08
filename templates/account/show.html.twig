@@ -5,7 +5,7 @@
 {% block body %}
     {% embed 'components/_card.html.twig' %}
         {% block header_left %}
-            {{ include('components/_back_to_list.html.twig', { 'back_path': 'app_account_index'}) }}
+            {{ include('components/_back_to_list.html.twig', { 'back_path': path('app_account_index')}) }}
         {% endblock %}
 
         {% block header_center %}

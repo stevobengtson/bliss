@@ -18,11 +18,6 @@ class CategoryGroup
     #[ORM\Column(length: 255, nullable: false)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::BIGINT, nullable: false, options: ['default' => 0])]
-    private string $assigned = '0';
-
-    #[ORM\Column(type: Types::BIGINT, nullable: false, options: ['default' => 0])]
-    private string $activity = '0';
     #[ORM\OneToMany(mappedBy: 'categoryGroup', targetEntity: Category::class)]
     private Collection $categories;
 
@@ -44,30 +39,6 @@ class CategoryGroup
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getAssigned(): ?string
-    {
-        return $this->assigned;
-    }
-
-    public function setAssigned(string $assigned): static
-    {
-        $this->assigned = $assigned;
-
-        return $this;
-    }
-
-    public function getActivity(): ?string
-    {
-        return $this->activity;
-    }
-
-    public function setActivity(string $activity): static
-    {
-        $this->activity = $activity;
 
         return $this;
     }

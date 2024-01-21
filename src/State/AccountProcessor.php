@@ -7,10 +7,15 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Account;
 use App\Service\OwnerService;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
+/**
+ * @implements ProcessorInterface<Account, Account|void>
+ */
 class AccountProcessor implements ProcessorInterface
 {
     public function __construct(
+        #[Autowire('api_platform.doctrine.orm.state.item_provider')]
         private readonly ProcessorInterface $persistProcessor,
         private readonly OwnerService       $ownerService
     )

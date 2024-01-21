@@ -14,34 +14,36 @@ use App\Repository\AccountRepository;
 use App\State\BudgetProcessor;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Constant\Group;
+use App\Constant\Permission;
 use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
-    normalizationContext: ["groups" => ["account:read"]],
-    denormalizationContext: ["groups" => ["account:create", "account:update"]],
-    security: "is_granted('ROLE_USER')"
+    normalizationContext: ["groups" => [Group::ACCOUNT_READ]],
+    denormalizationContext: ["groups" => [Group::ACCOUNT_CREATE, Group::ACCOUNT_UPDATE]],
+    security: Permission::ROLE_USER
 )]
 #[GetCollection]
-#[Get(security: "object.owner == user")]
+#[Get(security: Permission::OBJECT_OWNER)]
 #[Post(processor: BudgetProcessor::class)]
-#[Patch(security: "previous_object.owner == user")]
-#[Put(securityPostDenormalize: "(object.owner == user and previous_object.owner == user)")]
-#[Delete(security: "object.owner == user")]
+#[Patch(security: Permission::PREVIOUS_OBJECT_OWNER)]
+#[Put(securityPostDenormalize: Permission::FULL_OWNER)]
+#[Delete(security: Permission::OBJECT_OWNER)]
 #[ORM\Entity(repositoryClass: AccountRepository::class)]
 class Account implements OwnedEntityInterface
 {
     #[Assert\Ulid]
-    #[Groups("account:read")]
+    #[Groups(Group::ACCOUNT_READ)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Column(type: UlidType::NAME, unique: true)]
     #[ORM\CustomIdGenerator(class: 'doctrine.ulid_generator')]
     private ?Ulid $id = null;
 
-    #[Groups(["account:read", "account:create", "account:update"])]
+    #[Groups([Group::ACCOUNT_READ, Group::ACCOUNT_CREATE, Group::ACCOUNT_UPDATE])]
     #[ORM\Column(length: 255, nullable: false)]
     private ?string $name = null;
 
@@ -49,12 +51,12 @@ class Account implements OwnedEntityInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Budget $budget = null;
 
-    #[Groups("account:read")]
+    #[Groups(Group::ACCOUNT_READ)]
     #[ORM\Column(type: Types::BIGINT, nullable: false, options: ['default' => 0])]
-    private ?string $balance = null;
+    private string $balance = '0';
 
     #[Assert\Type(AccountType::class)]
-    #[Groups("account:read")]
+    #[Groups([Group::ACCOUNT_READ, Group::ACCOUNT_CREATE, Group::ACCOUNT_UPDATE])]
     #[ORM\Column(type: Types::STRING, nullable: false, enumType: AccountType::class)]
     private ?AccountType $type = null;
 
@@ -62,11 +64,11 @@ class Account implements OwnedEntityInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?User $owner = null;
 
-    #[Groups("account:read")]
+    #[Groups(Group::ACCOUNT_READ)]
     #[ORM\Column(nullable: false)]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[Groups("account:read")]
+    #[Groups(Group::ACCOUNT_READ)]
     #[ORM\Column(nullable: false)]
     private ?\DateTimeImmutable $updatedAt = null;
 
@@ -112,7 +114,7 @@ class Account implements OwnedEntityInterface
         return $this;
     }
 
-    public function getBalance(): ?string
+    public function getBalance(): string
     {
         return $this->balance;
     }
@@ -136,12 +138,12 @@ class Account implements OwnedEntityInterface
         return $this;
     }
 
-    public function getOwner(): User
+    public function getOwner(): ?User
     {
         return $this->owner;
     }
 
-    public function setOwner(User $owner): static
+    public function setOwner(?User $owner): static
     {
         $this->owner = $owner;
 

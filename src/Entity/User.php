@@ -9,6 +9,8 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Constant\Group;
+use App\Constant\Permission;
 use App\Repository\UserRepository;
 use App\State\UserPasswordHasher;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -27,20 +29,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity('email')]
 #[ApiResource(
-    normalizationContext: ["groups" => ["user:read"]],
-    denormalizationContext: ["groups" => ["user:create", "user:update"]],
-    security: "is_granted('ROLE_USER')"
+    normalizationContext: ["groups" => [Group::USER_READ]],
+    denormalizationContext: ["groups" => [Group::USER_CREATE, Group::USER_UPDATE]]
 )]
-#[GetCollection(security: "is_granted('ROLE_ADMIN')")]
-#[Get(security: "object == user")]
+#[GetCollection(security: Permission::ROLE_ADMIN)]
+#[Get(security: Permission::OBJECT_USER)]
 #[Post(processor: UserPasswordHasher::class)]
-#[Patch(security: "object == user", processor: UserPasswordHasher::class)]
-#[Put(security: "object == user", processor: UserPasswordHasher::class)]
-#[Delete(security: "object == user")]
+#[Patch(security: Permission::OBJECT_USER, processor: UserPasswordHasher::class)]
+#[Put(security: Permission::FULL_OWNER, processor: UserPasswordHasher::class)]
+#[Delete(security: Permission::OBJECT_USER)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[Assert\Ulid]
-    #[Groups("user:read")]
+    #[Groups(Group::USER_READ)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Column(type: UlidType::NAME, unique: true)]
@@ -49,7 +50,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups(["user:read", "user:create", "user:update"])]
+    #[Groups([Group::USER_READ, Group::USER_CREATE, Group::USER_UPDATE])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
@@ -62,20 +63,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[Assert\NotBlank(groups: ["user:create", "user:update"])]
-    #[Groups(["user:create", "user:update"])]
+    #[Assert\NotBlank(groups: [Group::USER_CREATE, Group::USER_UPDATE])]
+    #[Groups([Group::USER_CREATE, Group::USER_UPDATE])]
     private ?string $plainPassword = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["user:read", "user:create", "user:update"])]
+    #[Groups([Group::USER_READ, Group::USER_CREATE, Group::USER_UPDATE])]
     private ?string $name = null;
 
     #[ORM\Column]
-    #[Groups("user:read")]
+    #[Groups(Group::USER_READ)]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    #[Groups("user:read")]
+    #[Groups(Group::USER_READ)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Budget::class, orphanRemoval: true)]

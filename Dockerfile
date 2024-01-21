@@ -20,6 +20,9 @@ RUN apk add --no-cache \
 		file \
 		gettext \
 		git \
+    	nodejs \
+		npm \
+    	bash \
 	;
 
 RUN set -eux; \
@@ -60,7 +63,7 @@ RUN set -eux; \
 		xdebug \
 	;
 
-# TODO: Install Symfony
+RUN wget https://get.symfony.com/cli/installer -O - | bash
 
 COPY --link frankenphp/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 

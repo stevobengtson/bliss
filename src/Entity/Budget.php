@@ -9,6 +9,8 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Constant\Group;
+use App\Constant\Permission;
 use App\Repository\BudgetRepository;
 use App\State\BudgetProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,25 +19,24 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Ulid;
-use Symfony\UX\Turbo\Attribute\Broadcast;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BudgetRepository::class)]
 #[ApiResource(
-    normalizationContext: ["groups" => ["budget:read"]],
-    denormalizationContext: ["groups" => ["budget:create", "budget:update"]],
-    security: "is_granted('ROLE_USER')"
+    normalizationContext: ['groups' => [Group::BUDGET_READ]],
+    denormalizationContext: ['groups' => [Group::BUDGET_CREATE, Group::BUDGET_UPDATE]],
+    security: Permission::ROLE_USER
 )]
 #[GetCollection]
-#[Get(security: "object.owner == user")]
+#[Get(security: Permission::OBJECT_OWNER)]
 #[Post(processor: BudgetProcessor::class)]
-#[Patch(security: "previous_object.owner == user")]
-#[Put(securityPostDenormalize: "(object.owner == user and previous_object.owner == user)")]
-#[Delete(security: "object.owner == user")]
+#[Patch(security: Permission::PREVIOUS_OBJECT_OWNER)]
+#[Put(securityPostDenormalize: Permission::FULL_OWNER)]
+#[Delete(security: Permission::OBJECT_OWNER)]
 class Budget implements OwnedEntityInterface
 {
     #[Assert\Ulid]
-    #[Groups("budget:read")]
+    #[Groups(Group::BUDGET_READ)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Column(type: UlidType::NAME, unique: true)]
@@ -47,18 +48,18 @@ class Budget implements OwnedEntityInterface
     private ?User $owner = null;
 
     #[Assert\NotBlank()]
-    #[Groups(["budget:read", "budget:create", "budget:update"])]
+    #[Groups([Group::BUDGET_READ, Group::BUDGET_CREATE, Group::BUDGET_UPDATE])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'budget', targetEntity: Account::class, orphanRemoval: true)]
     private Collection $accounts;
 
-    #[Groups("budget:read")]
+    #[Groups(Group::BUDGET_READ)]
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[Groups("budget:read")]
+    #[Groups(Group::BUDGET_READ)]
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
@@ -85,12 +86,12 @@ class Budget implements OwnedEntityInterface
         return $this->id;
     }
 
-    public function getOwner(): User
+    public function getOwner(): ?User
     {
         return $this->owner;
     }
 
-    public function setOwner(User $owner): static
+    public function setOwner(?User $owner): static
     {
         $this->owner = $owner;
 

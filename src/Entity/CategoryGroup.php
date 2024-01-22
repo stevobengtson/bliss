@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Repository\GategoryGroupRepository;
+use App\Repository\CategoryGroupRepository;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: GategoryGroupRepository::class)]
+#[ORM\Entity(repositoryClass: CategoryGroupRepository::class)]
 #[ApiResource]
 #[GetCollection]
 #[Get(security: Permission::OBJECT_OWNER)]
@@ -40,6 +40,7 @@ class CategoryGroup implements OwnedEntityInterface, TrackedEntityInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Budget $budget = null;
 
+    #[Groups([Group::CATEGORY_GROUP_READ, Group::CATEGORY_GROUP_CREATE, Group::CATEGORY_GROUP_UPDATE])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 

@@ -8,10 +8,6 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ account.id }}</td>
-            </tr>
-            <tr>
                 <th>Name</th>
                 <td>{{ account.name }}</td>
             </tr>
@@ -22,14 +18,6 @@
             <tr>
                 <th>Type</th>
                 <td>{{ account.type.value }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ account.createdAt ? account.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ account.updatedAt ? account.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
         </tbody>
     </table>

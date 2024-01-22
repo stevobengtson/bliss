@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New CategoryGroup{% endblock %}
+
+{% block body %}
+    <h1>Create new CategoryGroup</h1>
+
+    {{ include('category_group/_form.html.twig') }}
+
+    <a href="{{ path('app_category_group_index', {budget_id: budget.id}) }}">back to list</a>
+{% endblock %}

@@ -19,7 +19,8 @@
                 <td>
                     <a href="{{ path('app_budget_show', {'id': budget.id}) }}">show</a>
                     <a href="{{ path('app_budget_edit', {'id': budget.id}) }}">edit</a>
-                    <a href="{{ path('app_account_index', {'budget_id': budget.id})}}">accounts</a>
+                    <a href="{{ path('app_account_index', {'budget_id': budget.id})}}">Accounts</a>
+                    <a href="{{ path('app_category_group_index', {'budget_id': budget.id})}}">Category Groups</a>
                 </td>
             </tr>
         {% else %}

@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 class BudgetProcessor implements ProcessorInterface
 {
     public function __construct(
-        #[Autowire('api_platform.doctrine.orm.state.item_provider')]
+        #[Autowire('api_platform.doctrine.orm.state.persist_processor')]
         private readonly ProcessorInterface $persistProcessor,
         private readonly OwnerService      $ownerService
     ) {
@@ -24,12 +24,12 @@ class BudgetProcessor implements ProcessorInterface
     /**
      * @inheritDoc
      */
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
         if ($data instanceof Budget) {
             if ($operation instanceof Post) {
                 $this->ownerService->setOwner($data);
-                $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+                return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
             }
         }
     }

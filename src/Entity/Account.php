@@ -12,10 +12,13 @@ use ApiPlatform\Metadata\Put;
 use App\Enum\AccountType;
 use App\Repository\AccountRepository;
 use App\State\BudgetProcessor;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Constant\Group;
 use App\Constant\Permission;
+use App\State\AccountProcessor;
 use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Ulid;
@@ -28,7 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[GetCollection]
 #[Get(security: Permission::OBJECT_OWNER)]
-#[Post(processor: BudgetProcessor::class)]
+#[Post(processor: AccountProcessor::class)]
 #[Patch(security: Permission::PREVIOUS_OBJECT_OWNER)]
 #[Put(securityPostDenormalize: Permission::FULL_OWNER)]
 #[Delete(security: Permission::OBJECT_OWNER)]
@@ -72,6 +75,14 @@ class Account implements OwnedEntityInterface
     #[Groups(Group::ACCOUNT_READ)]
     #[ORM\Column(nullable: false)]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\OneToMany(mappedBy: 'account', targetEntity: Transaction::class)]
+    private Collection $transactions;
+
+    public function __construct()
+    {
+        $this->transactions = new ArrayCollection();
+    }
 
     #[ORM\PrePersist()]
     public function prePersist(): void
@@ -171,6 +182,36 @@ class Account implements OwnedEntityInterface
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Transaction>
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
+    }
+
+    public function addTransaction(Transaction $transaction): static
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions->add($transaction);
+            $transaction->setAccount($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction(Transaction $transaction): static
+    {
+        if ($this->transactions->removeElement($transaction)) {
+            // set the owning side to null (unless already changed)
+            if ($transaction->getAccount() === $this) {
+                $transaction->setAccount(null);
+            }
+        }
 
         return $this;
     }

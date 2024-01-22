@@ -14,4 +14,8 @@ class Group {
     public const string USER_READ = "user:read";
     public const string USER_CREATE = "user:create";
     public const string USER_UPDATE = "user:update";
+
+    public const string TRANSACTION_READ = "transaction:read";
+    public const string TRANSACTION_CREATE = "transaction:create";
+    public const string TRANSACTION_UPDATE = "transaction:update";
 }

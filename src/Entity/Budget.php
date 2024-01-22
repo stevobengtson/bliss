@@ -33,6 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Patch(security: Permission::PREVIOUS_OBJECT_OWNER)]
 #[Put(securityPostDenormalize: Permission::FULL_OWNER)]
 #[Delete(security: Permission::OBJECT_OWNER)]
+#[ORM\HasLifecycleCallbacks]
 class Budget implements OwnedEntityInterface
 {
     #[Assert\Ulid]

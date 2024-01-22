@@ -21,6 +21,28 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
+        second_level_cache:
+            enabled: true
+            regions:
+                write_rare:
+                    # expire automatically after 10 days
+                    lifetime: 864000
+                    # let's use app's main cache pool
+                    # (in my case it's using Redis)
+                    cache_driver: { type: service, id: cache.app }
+
+                append_only:
+                    # expire automatically after 100 days
+                    lifetime: 8640000
+                    # let's use app's main cache pool
+                    # (in my case it's using Redis)
+                    cache_driver: { type: service, id: cache.app }
+        query_cache_driver:
+            type: pool
+            pool: doctrine.system_cache_pool
+        result_cache_driver:
+            type: pool
+            pool: doctrine.result_cache_pool
 
 when@test:
     doctrine:
@@ -33,17 +55,3 @@ when@prod:
         orm:
             auto_generate_proxy_classes: false
             proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
-            query_cache_driver:
-                type: pool
-                pool: doctrine.system_cache_pool
-            result_cache_driver:
-                type: pool
-                pool: doctrine.result_cache_pool
-
-    framework:
-        cache:
-            pools:
-                doctrine.result_cache_pool:
-                    adapter: cache.app
-                doctrine.system_cache_pool:
-                    adapter: cache.system

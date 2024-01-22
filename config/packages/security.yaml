@@ -13,16 +13,30 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
+        api:
+            pattern: ^/api
             stateless: true
             provider: app_user_provider
-            jwt: ~
+            entry_point: jwt
             json_login:
                 check_path: auth # The name in routes.yaml is enough for mapping
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            logout:
+                path: api_token_invalidate
+            jwt: ~
+            refresh_jwt:
+                check_path: api_refresh_token
+        main:
+            provider: app_user_provider
+            form_login:
+                login_path: app_login
+                check_path: app_login
+            logout:
+                path: /logout
+            switch_user: true
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
@@ -31,11 +45,11 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/admin$, roles: PUBLIC_ACCESS }
-        - { path: ^/api/users$, roles: PUBLIC_ACCESS, methods: ["POST"] }
         - { path: ^/api$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
+        - { path: ^/api/auth$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/users$, roles: PUBLIC_ACCESS, methods: ["POST"] }
         - { path: ^/api/docs.json(ld)?$, roles: PUBLIC_ACCESS } # Allows accessing API documentations and Swagger UI docs
-        - { path: ^/auth, roles: PUBLIC_ACCESS }
+        - { path: ^/login$, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

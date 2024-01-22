@@ -33,6 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Put(securityPostDenormalize: Permission::FULL_OWNER)]
 #[Delete(security: Permission::OBJECT_OWNER)]
 #[ORM\Entity(repositoryClass: AccountRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Account implements OwnedEntityInterface
 {
     #[Assert\Ulid]

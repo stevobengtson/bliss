@@ -11,14 +11,12 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Enum\AccountType;
 use App\Repository\AccountRepository;
-use App\State\BudgetProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Constant\Group;
 use App\Constant\Permission;
-use App\State\AccountProcessor;
 use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Ulid;
@@ -31,13 +29,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[GetCollection]
 #[Get(security: Permission::OBJECT_OWNER)]
-#[Post(processor: AccountProcessor::class)]
+#[Post()]
 #[Patch(security: Permission::PREVIOUS_OBJECT_OWNER)]
 #[Put(securityPostDenormalize: Permission::FULL_OWNER)]
 #[Delete(security: Permission::OBJECT_OWNER)]
 #[ORM\Entity(repositoryClass: AccountRepository::class)]
-#[ORM\HasLifecycleCallbacks]
-class Account implements OwnedEntityInterface
+class Account implements OwnedEntityInterface, TrackedEntityInterface
 {
     #[Assert\Ulid]
     #[Groups(Group::ACCOUNT_READ)]
@@ -82,19 +79,6 @@ class Account implements OwnedEntityInterface
     public function __construct()
     {
         $this->transactions = new ArrayCollection();
-    }
-
-    #[ORM\PrePersist()]
-    public function prePersist(): void
-    {
-        $this->createdAt = new \DateTimeImmutable();
-        $this->updatedAt = new \DateTimeImmutable();
-    }
-
-    #[ORM\PreUpdate()]
-    public function preUpdate(): void
-    {
-        $this->updatedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?Ulid

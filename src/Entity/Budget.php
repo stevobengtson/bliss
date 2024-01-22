@@ -12,7 +12,6 @@ use ApiPlatform\Metadata\Put;
 use App\Constant\Group;
 use App\Constant\Permission;
 use App\Repository\BudgetRepository;
-use App\State\BudgetProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -29,12 +28,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[GetCollection]
 #[Get(security: Permission::OBJECT_OWNER)]
-#[Post(processor: BudgetProcessor::class)]
+#[Post()]
 #[Patch(security: Permission::PREVIOUS_OBJECT_OWNER)]
 #[Put(securityPostDenormalize: Permission::FULL_OWNER)]
 #[Delete(security: Permission::OBJECT_OWNER)]
-#[ORM\HasLifecycleCallbacks]
-class Budget implements OwnedEntityInterface
+class Budget implements OwnedEntityInterface, TrackedEntityInterface
 {
     #[Assert\Ulid]
     #[Groups(Group::BUDGET_READ)]
@@ -64,22 +62,13 @@ class Budget implements OwnedEntityInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\PrePersist()]
-    public function prePersist(): void
-    {
-        $this->createdAt = new \DateTimeImmutable();
-        $this->updatedAt = new \DateTimeImmutable();
-    }
-
-    #[ORM\PreUpdate()]
-    public function preUpdate(): void
-    {
-        $this->updatedAt = new \DateTimeImmutable();
-    }
+    #[ORM\OneToMany(mappedBy: 'budget', targetEntity: CategoryGroup::class, orphanRemoval: true)]
+    private Collection $gategoryGroups;
 
     public function __construct()
     {
         $this->accounts = new ArrayCollection();
+        $this->gategoryGroups = new ArrayCollection();
     }
 
     public function getId(): ?Ulid
@@ -161,6 +150,36 @@ class Budget implements OwnedEntityInterface
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GategoryGroup>
+     */
+    public function getGategoryGroups(): Collection
+    {
+        return $this->gategoryGroups;
+    }
+
+    public function addGategoryGroup(CategoryGroup $gategoryGroup): static
+    {
+        if (!$this->gategoryGroups->contains($gategoryGroup)) {
+            $this->gategoryGroups->add($gategoryGroup);
+            $gategoryGroup->setBudget($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGategoryGroup(CategoryGroup $gategoryGroup): static
+    {
+        if ($this->gategoryGroups->removeElement($gategoryGroup)) {
+            // set the owning side to null (unless already changed)
+            if ($gategoryGroup->getBudget() === $this) {
+                $gategoryGroup->setBudget(null);
+            }
+        }
 
         return $this;
     }

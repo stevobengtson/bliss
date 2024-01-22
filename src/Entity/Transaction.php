@@ -12,7 +12,6 @@ use ApiPlatform\Metadata\Put;
 use App\Repository\TransactionRepository;
 use App\Constant\Group;
 use App\Constant\Permission;
-use App\State\TransactionProcessor;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UlidType;
@@ -24,12 +23,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource]
 #[GetCollection]
 #[Get(security: Permission::OBJECT_OWNER)]
-#[Post(processor: TransactionProcessor::class)]
+#[Post()]
 #[Patch(security: Permission::PREVIOUS_OBJECT_OWNER)]
 #[Put(securityPostDenormalize: Permission::FULL_OWNER)]
 #[Delete(security: Permission::OBJECT_OWNER)]
-#[ORM\HasLifecycleCallbacks]
-class Transaction implements OwnedEntityInterface
+class Transaction implements OwnedEntityInterface, TrackedEntityInterface
 {
     #[Assert\Ulid]
     #[Groups(Group::TRANSACTION_READ)]
@@ -73,20 +71,7 @@ class Transaction implements OwnedEntityInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\PrePersist()]
-    public function prePersist(): void
-    {
-        $this->createdAt = new \DateTimeImmutable();
-        $this->updatedAt = new \DateTimeImmutable();
-    }
-
-    #[ORM\PreUpdate()]
-    public function preUpdate(): void
-    {
-        $this->updatedAt = new \DateTimeImmutable();
-    }
-    
-    public function getId(): ?int
+    public function getId(): ?Ulid
     {
         return $this->id;
     }

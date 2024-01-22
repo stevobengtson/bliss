@@ -18,4 +18,8 @@ class Group {
     public const string TRANSACTION_READ = "transaction:read";
     public const string TRANSACTION_CREATE = "transaction:create";
     public const string TRANSACTION_UPDATE = "transaction:update";
+
+    public const string CATEGORY_GROUP_READ = "category_group:read";
+    public const string CATEGORY_GROUP_CREATE = "category_group:create";
+    public const string CATEGORY_GROUP_UPDATE = "category_group:update";
 }

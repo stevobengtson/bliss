@@ -25,7 +25,6 @@ use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\HasLifecycleCallbacks]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity('email')]
 #[ApiResource(
@@ -38,7 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Patch(security: Permission::OBJECT_USER, processor: UserPasswordHasher::class)]
 #[Put(security: Permission::FULL_OWNER, processor: UserPasswordHasher::class)]
 #[Delete(security: Permission::OBJECT_USER)]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, TrackedEntityInterface
 {
     #[Assert\Ulid]
     #[Groups(Group::USER_READ)]
@@ -85,19 +84,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->budgets = new ArrayCollection();
-    }
-
-    #[ORM\PrePersist]
-    public function prePersist(): void
-    {
-        $this->createdAt = new \DateTimeImmutable();
-        $this->updatedAt = new \DateTimeImmutable();
-    }
-
-    #[ORM\PreUpdate]
-    public function preUpdate(): void
-    {
-        $this->updatedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?Ulid

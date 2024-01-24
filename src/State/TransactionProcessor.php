@@ -16,6 +16,14 @@ class TransactionProcessor implements ProcessorInterface
         
     }
 
+    /**
+     * Handle the state.
+     *
+     * @param array<string, mixed>                                                                                                                                   $uriVariables
+     * @param array<string, mixed>&array{request?: \Symfony\Component\HttpFoundation\Request, previous_data?: mixed, resource_class?: string, original_data?: mixed} $context
+     *
+     * @return T
+     */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
     }

@@ -61,7 +61,7 @@ class Account implements OwnedEntityInterface, TrackedEntityInterface
     #[ORM\Column(type: Types::STRING, nullable: false, enumType: AccountType::class)]
     private ?AccountType $type = null;
 
-    #[ORM\ManyToOne(inversedBy: 'accounts')]
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $owner = null;
 

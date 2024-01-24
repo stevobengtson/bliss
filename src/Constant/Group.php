@@ -22,4 +22,8 @@ class Group {
     public const string CATEGORY_GROUP_READ = "category_group:read";
     public const string CATEGORY_GROUP_CREATE = "category_group:create";
     public const string CATEGORY_GROUP_UPDATE = "category_group:update";
+
+    public const string CATEGORY_READ = "category:read";
+    public const string CATEGORY_CREATE = "category:create";
+    public const string CATEGORY_UPDATE = "category:update";
 }

@@ -20,6 +20,7 @@
                 <td>
                     <a href="{{ path('app_category_group_show', {'id': category_group.id}) }}">show</a>
                     <a href="{{ path('app_category_group_edit', {'id': category_group.id}) }}">edit</a>
+                    <a href="{{ path('app_category_index', {'category_group_id': category_group.id}) }}">categories</a>
                 </td>
             </tr>
         {% else %}

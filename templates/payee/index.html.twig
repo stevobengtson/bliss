@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Payee index{% endblock %}
+
+{% block body %}
+    <h1>Payee index</h1>
+    <a href="{{ path('app_budget_index')}}">Back to budgets</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Category Link</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for payee in payees %}
+            <tr>
+                <td>{{ payee.name }}</td>
+                <td>{{ payee.linkCategory.name }}</td>
+                <td>
+                    <a href="{{ path('app_payee_show', {'id': payee.id}) }}">show</a>
+                    <a href="{{ path('app_payee_edit', {'id': payee.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_payee_new', {budget_id: budget.id}) }}">Create new</a>
+{% endblock %}

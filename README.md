@@ -69,6 +69,8 @@ BucketCategory
  - BudgetID
  - UserID (Owner)
  - CategoryGroupID
+ - Month
+ - Year
  - Allocated
  - Used
 

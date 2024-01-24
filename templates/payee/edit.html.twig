@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Payee{% endblock %}
+
+{% block body %}
+    <h1>Edit Payee</h1>
+
+    {{ include('payee/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_payee_index', {'budget_id': payee.budget.id}) }}">back to list</a>
+
+    {{ include('payee/_delete_form.html.twig') }}
+{% endblock %}

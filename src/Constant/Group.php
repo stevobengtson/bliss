@@ -26,4 +26,8 @@ class Group {
     public const string CATEGORY_READ = "category:read";
     public const string CATEGORY_CREATE = "category:create";
     public const string CATEGORY_UPDATE = "category:update";
+
+    public const string PAYEE_READ = "payee:read";
+    public const string PAYEE_CREATE = "payee:create";
+    public const string PAYEE_UPDATE = "payee:update";
 }

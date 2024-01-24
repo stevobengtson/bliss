@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Payee{% endblock %}
+
+{% block body %}
+    <h1>Create new Payee</h1>
+
+    {{ include('payee/_form.html.twig') }}
+
+    <a href="{{ path('app_payee_index', {budget_id: budget.id}) }}">back to list</a>
+{% endblock %}

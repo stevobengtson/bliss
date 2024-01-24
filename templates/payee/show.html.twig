@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Payee{% endblock %}
+
+{% block body %}
+    <h1>Payee</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <td>{{ payee.name }}</td>
+            </tr>
+            <tr>
+                <th>Link Category</th>
+                <td>{{ payee.linkCategory.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_payee_index', {budget_id: payee.budget.id}) }}">back to list</a>
+
+    <a href="{{ path('app_payee_edit', {'id': payee.id}) }}">edit</a>
+
+    {{ include('payee/_delete_form.html.twig') }}
+{% endblock %}

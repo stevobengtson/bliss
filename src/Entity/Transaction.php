@@ -71,6 +71,17 @@ class Transaction implements OwnedEntityInterface, TrackedEntityInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Budget $budget = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $category = null;
+
+    #[ORM\ManyToOne]
+    private ?Payee $payee = null;
+
     public function getId(): ?Ulid
     {
         return $this->id;
@@ -180,6 +191,42 @@ class Transaction implements OwnedEntityInterface, TrackedEntityInterface
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getBudget(): ?Budget
+    {
+        return $this->budget;
+    }
+
+    public function setBudget(?Budget $budget): static
+    {
+        $this->budget = $budget;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getPayee(): ?Payee
+    {
+        return $this->payee;
+    }
+
+    public function setPayee(?Payee $payee): static
+    {
+        $this->payee = $payee;
 
         return $this;
     }

@@ -82,6 +82,10 @@ class Transaction implements OwnedEntityInterface, TrackedEntityInterface
     #[ORM\ManyToOne]
     private ?Payee $payee = null;
 
+    #[Groups([Group::TRANSACTION_READ, Group::TRANSACTION_CREATE, Group::TRANSACTION_UPDATE])]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $entryDate = null;
+
     public function getId(): ?Ulid
     {
         return $this->id;
@@ -227,6 +231,18 @@ class Transaction implements OwnedEntityInterface, TrackedEntityInterface
     public function setPayee(?Payee $payee): static
     {
         $this->payee = $payee;
+
+        return $this;
+    }
+
+    public function getEntryDate(): ?\DateTimeInterface
+    {
+        return $this->entryDate;
+    }
+
+    public function setEntryDate(\DateTimeInterface $entryDate): static
+    {
+        $this->entryDate = $entryDate;
 
         return $this;
     }

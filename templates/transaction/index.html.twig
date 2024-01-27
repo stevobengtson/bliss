@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Transaction index{% endblock %}
+
+{% block body %}
+    <h1>Transaction index</h1>
+    <a href="{{ path('app_account_index', {budget_id: account.budget.id})}}">Back to accounts</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Entry Date</th>
+                <th>Category</th>
+                <th>Payee</th>
+                <th>Memo</th>
+                <th>Credit</th>
+                <th>Debit</th>
+                <th>RunningBalance</th>
+                <th>Cleared</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.entryDate|date('Y-m-d') }}</td>
+                <td>{{ transaction.category.name }}
+                <td>{{ transaction.payee.name }}
+                <td>{{ transaction.memo }}</td>
+                <td>{{ transaction.credit ? transaction.credit|format_currency('USD') : '' }}</td>
+                <td>{{ transaction.debit ? transaction.debit|format_currency('USD') : '' }}</td>
+                <td>{{ transaction.runningBalance }}</td>
+                <td>{{ transaction.cleared ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_transaction_show', {'id': transaction.id}) }}">show</a>
+                    <a href="{{ path('app_transaction_edit', {'id': transaction.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_transaction_new', {'account_id': account.id}) }}">Create new</a>
+{% endblock %}

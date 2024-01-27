@@ -39,7 +39,6 @@ class CategoryGroupController extends AbstractController
     ): Response {
         $categoryGroup = new CategoryGroup();
         $categoryGroup->setBudget($budget);
-        $categoryGroup->setOwner($budget->getOwner());
 
         $form = $this->createForm(CategoryGroupType::class, $categoryGroup);
         $form->handleRequest($request);

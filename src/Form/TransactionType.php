@@ -19,10 +19,12 @@ class TransactionType extends AbstractType
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name',
+                'autocomplete' => true,
             ])
             ->add('payee', EntityType::class, [
                 'class' => Payee::class,
                 'choice_label' => 'name',
+                'autocomplete' => true,
             ])
             ->add('memo')
             ->add('credit')

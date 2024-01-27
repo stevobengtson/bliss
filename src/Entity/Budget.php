@@ -2,36 +2,18 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use App\Constant\Group;
-use App\Constant\Permission;
 use App\Repository\BudgetRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BudgetRepository::class)]
-#[ApiResource(
-    normalizationContext: ['groups' => [Group::BUDGET_READ]],
-    denormalizationContext: ['groups' => [Group::BUDGET_CREATE, Group::BUDGET_UPDATE]],
-    security: Permission::ROLE_USER
-)]
-#[GetCollection]
-#[Get(security: Permission::OBJECT_OWNER)]
-#[Post()]
-#[Patch(security: Permission::PREVIOUS_OBJECT_OWNER)]
-#[Put(securityPostDenormalize: Permission::FULL_OWNER)]
-#[Delete(security: Permission::OBJECT_OWNER)]
 class Budget implements OwnedEntityInterface, TrackedEntityInterface
 {
     #[Assert\Ulid]
@@ -39,7 +21,7 @@ class Budget implements OwnedEntityInterface, TrackedEntityInterface
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Column(type: UlidType::NAME, unique: true)]
-    #[ORM\CustomIdGenerator(class: 'doctrine.ulid_generator')]
+    #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
     private ?Ulid $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'budgets')]

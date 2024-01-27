@@ -33,7 +33,6 @@ class BudgetController extends AbstractController
         }
 
         $budget = new Budget();
-        $budget->setOwner($user);
 
         $form = $this->createForm(BudgetType::class, $budget);
         $form->handleRequest($request);

@@ -65,7 +65,6 @@ class TransactionController extends AbstractController
         $transaction = new Transaction();
         $transaction->setAccount($account);
         $transaction->setBudget($account->getBudget());
-        $transaction->setOwner($account->getOwner());
 
         $form = $this->createForm(TransactionType::class, $transaction);
         $form->handleRequest($request);
@@ -81,14 +80,6 @@ class TransactionController extends AbstractController
             'transaction' => $transaction,
             'form' => $form,
             'account' => $account
-        ]);
-    }
-
-    #[Route('transaction/{id}', name: 'app_transaction_show', methods: ['GET'])]
-    public function show(Transaction $transaction): Response
-    {
-        return $this->render('transaction/show.html.twig', [
-            'transaction' => $transaction,
         ]);
     }
 

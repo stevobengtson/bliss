@@ -39,7 +39,6 @@ class PayeeController extends AbstractController
     ): Response {
         $payee = new Payee();
         $payee->setBudget($budget);
-        $payee->setOwner($budget->getOwner());
 
         $form = $this->createForm(PayeeType::class, $payee);
         $form->handleRequest($request);

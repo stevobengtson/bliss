@@ -3,7 +3,10 @@
 {% block title %}Budgets{% endblock %}
 
 {% block body %}
-    <h1>Budgets</h1>
+    {% include '_page_header.html.twig' with {
+        'title': "Budgets",
+        'new_path': path('app_budget_new')
+    } only %}
 
     <table class="table">
         <thead>
@@ -17,20 +20,18 @@
             <tr>
                 <td>{{ budget.name }}</td>
                 <td>
-                    <a href="{{ path('app_budget_show', {'id': budget.id}) }}">show</a>
-                    <a href="{{ path('app_budget_edit', {'id': budget.id}) }}">edit</a> | 
-                    <a href="{{ path('app_account_index', {'budget_id': budget.id})}}">Accounts</a> | 
-                    <a href="{{ path('app_category_group_index', {'budget_id': budget.id})}}">Category Groups</a> | 
-                    <a href="{{ path('app_payee_index', {'budget_id': budget.id})}}">Payees</a>
+                    {% include '_show_button.html.twig' with { 'show_path': path('app_budget_show', {'id': budget.id})} %}
+                    {% include '_edit_button.html.twig' with { 'edit_path': path('app_budget_edit', {'id': budget.id})} %}
+                    <a class="btn btn-sm btn-outline-dark" href="{{ path('app_account_index', {'budget_id': budget.id})}}">Accounts</a>
+                    <a class="btn btn-sm btn-outline-dark" href="{{ path('app_category_group_index', {'budget_id': budget.id})}}">Category Groups</a>
+                    <a class="btn btn-sm btn-outline-dark" href="{{ path('app_payee_index', {'budget_id': budget.id})}}">Payees</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="2">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_budget_new') }}">Create new</a>
 {% endblock %}

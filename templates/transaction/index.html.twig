@@ -1,12 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Transaction index{% endblock %}
+{% block title %}{{ account.name|capitalize ~ " transactions" }}{% endblock %}
 
 {% block body %}
-    <h1>Transaction index</h1>
-    <a href="{{ path('app_account_index', {budget_id: account.budget.id})}}">Back to accounts</a>
+    {% include '_page_header.html.twig' with {
+        'back_path': path('app_account_index', {budget_id: account.budget.id}),
+        'title': account.name|capitalize ~ " transactions",
+        'new_path': path('app_transaction_new', {'account_id': account.id})
+    } only %}
 
-    <table class="table">
+    <table class="table table-striped table-hover table-bordered">
         <thead>
             <tr>
                 <th>Entry Date</th>
@@ -32,8 +35,7 @@
                 <td>{{ transaction.runningBalance }}</td>
                 <td>{{ transaction.cleared ? 'Yes' : 'No' }}</td>
                 <td>
-                    <a href="{{ path('app_transaction_show', {'id': transaction.id}) }}">show</a>
-                    <a href="{{ path('app_transaction_edit', {'id': transaction.id}) }}">edit</a>
+                    {% include '_edit_button.html.twig' with { 'edit_path': path('app_transaction_edit', {'id': transaction.id})} %}
                 </td>
             </tr>
         {% else %}
@@ -43,6 +45,4 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_transaction_new', {'account_id': account.id}) }}">Create new</a>
 {% endblock %}

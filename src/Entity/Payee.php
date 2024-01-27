@@ -2,34 +2,16 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use App\Constant\Group;
-use App\Constant\Permission;
 use App\Repository\PayeeRepository;
-use App\State\UserPasswordHasher;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PayeeRepository::class)]
-#[ApiResource(
-    normalizationContext: ["groups" => [Group::PAYEE_READ]],
-    denormalizationContext: ["groups" => [Group::PAYEE_CREATE, Group::PAYEE_UPDATE]]
-)]
-#[GetCollection]
-#[Get(security: Permission::OBJECT_USER)]
-#[Post]
-#[Patch(security: Permission::OBJECT_USER, processor: UserPasswordHasher::class)]
-#[Put(security: Permission::FULL_OWNER, processor: UserPasswordHasher::class)]
-#[Delete(security: Permission::OBJECT_USER)]
 class Payee implements OwnedEntityInterface
 {
     #[Assert\Ulid]
@@ -37,7 +19,7 @@ class Payee implements OwnedEntityInterface
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Column(type: UlidType::NAME, unique: true)]
-    #[ORM\CustomIdGenerator(class: 'doctrine.ulid_generator')]
+    #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
     private ?Ulid $id = null;
 
     #[ORM\ManyToOne]

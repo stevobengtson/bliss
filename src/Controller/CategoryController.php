@@ -39,7 +39,6 @@ class CategoryController extends AbstractController
         $category = new Category();
         $category->setCategoryGroup($categoryGroup);
         $category->setBudget($categoryGroup->getBudget());
-        $category->setOwner($categoryGroup->getOwner());
 
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);

@@ -2,32 +2,18 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CategoryGroupRepository;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use App\Constant\Group;
-use App\Constant\Permission;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryGroupRepository::class)]
-#[ApiResource]
-#[GetCollection]
-#[Get(security: Permission::OBJECT_OWNER)]
-#[Post()]
-#[Patch(security: Permission::PREVIOUS_OBJECT_OWNER)]
-#[Put(securityPostDenormalize: Permission::FULL_OWNER)]
-#[Delete(security: Permission::OBJECT_OWNER)]
 class CategoryGroup implements OwnedEntityInterface, TrackedEntityInterface
 {
     #[Assert\Ulid]
@@ -35,7 +21,7 @@ class CategoryGroup implements OwnedEntityInterface, TrackedEntityInterface
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Column(type: UlidType::NAME, unique: true)]
-    #[ORM\CustomIdGenerator(class: 'doctrine.ulid_generator')]
+    #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
     private ?Ulid $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'gategoryGroups')]

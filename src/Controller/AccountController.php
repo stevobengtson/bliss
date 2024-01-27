@@ -38,7 +38,6 @@ class AccountController extends AbstractController
     ): Response {
         $account = new Account();
         $account->setBudget($budget);
-        $account->setOwner($budget->getOwner());
 
         $form = $this->createForm(AccountType::class, $account);
         $form->handleRequest($request);

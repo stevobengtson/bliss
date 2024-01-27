@@ -1,0 +1,18 @@
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            {% if back_path ?? false %}
+            <a href="{{ back_path }}"
+                class="btn btn-sm btn-outline-dark me-2">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            {% endif %}
+            <span class="navbar-brand mb-0 h1">{{ title }}</span>
+            {% if new_path ?? false %}
+            <form class="d-flex">
+            <a href="{{ new_path }}"
+                class="btn btn-sm btn-outline-success me-2"
+                type="button">Create new</a>
+            </form>
+            {% endif %}
+        </div>
+    </nav>

@@ -1,12 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}CategoryGroup index{% endblock %}
+{% block title %}Category Groups{% endblock %}
 
 {% block body %}
-    <h1>CategoryGroup index</h1>
-    <a href="{{ path('app_budget_index')}}">Back to budgets</a>
+    {% include '_page_header.html.twig' with {
+        'back_path': path('app_budget_index'),
+        'title': "Category Groups",
+        'new_path': path('app_category_group_new', {budget_id: budget.id})
+    } only %}
 
-    <table class="table">
+    <table class="table table-striped table-hover table-bordered">
         <thead>
             <tr>
                 <th>Name</th>
@@ -18,18 +21,16 @@
             <tr>
                 <td>{{ category_group.name }}</td>
                 <td>
-                    <a href="{{ path('app_category_group_show', {'id': category_group.id}) }}">show</a>
-                    <a href="{{ path('app_category_group_edit', {'id': category_group.id}) }}">edit</a>
-                    <a href="{{ path('app_category_index', {'category_group_id': category_group.id}) }}">categories</a>
+                    {% include '_show_button.html.twig' with { 'show_path': path('app_category_group_show', {'id': category_group.id})} %}
+                    {% include '_edit_button.html.twig' with { 'edit_path': path('app_category_group_edit', {'id': category_group.id})} %}
+                    <a class="btn btn-sm btn-outline-dark" href="{{ path('app_category_index', {'category_group_id': category_group.id}) }}">Categories</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="2">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_category_group_new', {budget_id: budget.id}) }}">Create new</a>
 {% endblock %}

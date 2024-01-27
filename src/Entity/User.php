@@ -2,54 +2,25 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use App\Constant\Group;
-use App\Constant\Permission;
 use App\Repository\UserRepository;
-use App\State\UserPasswordHasher;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Attribute\Groups;
-use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity('email')]
-#[ApiResource(
-    normalizationContext: ["groups" => [Group::USER_READ]],
-    denormalizationContext: ["groups" => [Group::USER_CREATE, Group::USER_UPDATE]]
-)]
-#[GetCollection(security: Permission::ROLE_ADMIN)]
-#[Get(security: Permission::OBJECT_USER)]
-#[Post(processor: UserPasswordHasher::class)]
-#[Patch(security: Permission::OBJECT_USER, processor: UserPasswordHasher::class)]
-#[Put(security: Permission::FULL_OWNER, processor: UserPasswordHasher::class)]
-#[Delete(security: Permission::OBJECT_USER)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, TrackedEntityInterface
 {
-    #[Assert\Ulid]
-    #[Groups(Group::USER_READ)]
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\Column(type: UlidType::NAME, unique: true)]
-    #[ORM\CustomIdGenerator(class: 'doctrine.ulid_generator')]
-    private ?Ulid $id = null;
+    use EntityTrait;
 
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups([Group::USER_READ, Group::USER_CREATE, Group::USER_UPDATE])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
@@ -63,19 +34,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Tracked
     private ?string $password = null;
 
     #[Assert\NotBlank(groups: [Group::USER_CREATE, Group::USER_UPDATE])]
-    #[Groups([Group::USER_CREATE, Group::USER_UPDATE])]
     private ?string $plainPassword = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups([Group::USER_READ, Group::USER_CREATE, Group::USER_UPDATE])]
     private ?string $name = null;
 
     #[ORM\Column]
-    #[Groups(Group::USER_READ)]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    #[Groups(Group::USER_READ)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Budget::class, orphanRemoval: true)]
@@ -84,11 +51,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Tracked
     public function __construct()
     {
         $this->budgets = new ArrayCollection();
-    }
-
-    public function getId(): ?Ulid
-    {
-        return $this->id;
     }
 
     public function getEmail(): ?string

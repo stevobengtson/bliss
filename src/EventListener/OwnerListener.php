@@ -7,13 +7,11 @@ use App\Service\OwnerService;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\PrePersistEventArgs;
-use Symfony\Bundle\SecurityBundle\Security;
 
 #[AsDoctrineListener(event: Events::prePersist, priority: 500, connection: 'default')]
 final class OwnerListener
 {
     public function __construct(
-        private readonly Security $security,
         private readonly OwnerService $ownerService
     ) {
         

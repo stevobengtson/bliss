@@ -20,9 +20,9 @@ class OwnerService
      */
     public function setOwner(OwnedEntityInterface $entity): void
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $this->security->getUser();
-        if (null === $user) {
+        if (null == $user) {
             throw new NotLoggedInException(403);
         }
         $entity->setOwner($user);

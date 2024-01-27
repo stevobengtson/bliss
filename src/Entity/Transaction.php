@@ -2,31 +2,17 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use App\Repository\TransactionRepository;
 use App\Constant\Group;
-use App\Constant\Permission;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
-#[ApiResource]
-#[GetCollection]
-#[Get(security: Permission::OBJECT_OWNER)]
-#[Post()]
-#[Patch(security: Permission::PREVIOUS_OBJECT_OWNER)]
-#[Put(securityPostDenormalize: Permission::FULL_OWNER)]
-#[Delete(security: Permission::OBJECT_OWNER)]
 class Transaction implements OwnedEntityInterface, TrackedEntityInterface
 {
     #[Assert\Ulid]
@@ -34,7 +20,7 @@ class Transaction implements OwnedEntityInterface, TrackedEntityInterface
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\Column(type: UlidType::NAME, unique: true)]
-    #[ORM\CustomIdGenerator(class: 'doctrine.ulid_generator')]
+    #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
     private ?Ulid $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'transactions')]

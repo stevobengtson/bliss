@@ -1,12 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Payee index{% endblock %}
+{% block title %}Payees{% endblock %}
 
 {% block body %}
-    <h1>Payee index</h1>
-    <a href="{{ path('app_budget_index')}}">Back to budgets</a>
+    {% include '_page_header.html.twig' with {
+        'back_path': path('app_budget_index'),
+        'title': "Payees",
+        'new_path': path('app_payee_new', {budget_id: budget.id})
+    } only %}
 
-    <table class="table">
+    <table class="table table-striped table-hover table-bordered">
         <thead>
             <tr>
                 <th>Name</th>
@@ -20,8 +23,8 @@
                 <td>{{ payee.name }}</td>
                 <td>{{ payee.linkCategory.name }}</td>
                 <td>
-                    <a href="{{ path('app_payee_show', {'id': payee.id}) }}">show</a>
-                    <a href="{{ path('app_payee_edit', {'id': payee.id}) }}">edit</a>
+                    {% include '_show_button.html.twig' with { 'show_path': path('app_payee_show', {'id': payee.id})} %}
+                    {% include '_edit_button.html.twig' with { 'edit_path': path('app_payee_edit', {'id': payee.id})} %}
                 </td>
             </tr>
         {% else %}
@@ -31,6 +34,4 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_payee_new', {budget_id: budget.id}) }}">Create new</a>
 {% endblock %}

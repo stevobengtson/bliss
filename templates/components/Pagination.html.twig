@@ -1,0 +1,9 @@
+<nav{{ attributes }}>
+    <ul class="pagination">
+        {% for item in this.items %}
+        <li class="page-item{{ item.disabled ? ' disabled' : '' }}{{ item.active ? ' active' : '' }}">
+            <a class="page-link" href="{{ item.link }}">{{ item.label|raw }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</nav>

@@ -26,7 +26,7 @@ class TransactionController extends AbstractController
         #[MapQueryParameter]
         int $page = 1,
         #[MapQueryParameter]
-        int $itemsPerPage = 25
+        int $itemsPerPage = 10
     ): Response {
         $queryBuilder = $transactionRepository->createQueryBuilder('t');
         $queryBuilder->select('t')

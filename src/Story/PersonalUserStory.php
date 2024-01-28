@@ -3,67 +3,68 @@
 namespace App\Story;
 
 use App\Entity\Budget;
-use App\Entity\CategoryGroup;
 use App\Entity\User;
 use App\Enum\AccountType;
 use App\Factory\AccountFactory;
 use App\Factory\BudgetFactory;
 use App\Factory\CategoryFactory;
 use App\Factory\CategoryGroupFactory;
+use App\Factory\PayeeFactory;
+use App\Factory\TransactionFactory;
 use App\Factory\UserFactory;
+use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\Story;
 
 final class PersonalUserStory extends Story
 {
     /**
-     * @var array<string, array<string>>
+     * @var array<string, array{ name: string }>
      */
     private const array CATEGORIES = [
-           'Home' => [
-                'Rent',
-                'Telus Home',
-                'FortisBC',
-                'BC Hydro',
-                'Sewer and Water',
-                'Household',
-                'Renters Insurance',
-            ],
-            'Essentials' => [
-                'Support',
-                'Car Loan',
-                'Auto Gas',
-                'Groceries',
-                'Koodo',
-                'Bank Fees',
-                'Medical',
-                'Pets',
-            ],
-            'Entertainment' => [
-                'Kelly',
-                'Natasha',
-                'Dining Out',
-                'Fun Money',
-            ],
-            'Subscriptions' => [
-                'Apple Services',
-                'You Need a Budget',
-                'Britbox',
-                'Crave',
-                'Paramount+',
-                'Nintendo Online',
-                'YouTube',
-                'Spotify',
-                'Twitch',
-                'Discord',
-            ],
-            'Long Term' => [
-                'Auto Insurance',
-                'Auto Maintenance',
-                'Christmas',
-                'Vacation',
-                'Emergency',
-            ],
-        ]
+        'Home' => [
+            'Rent',
+            'Telus Home',
+            'FortisBC',
+            'BC Hydro',
+            'Sewer and Water',
+            'Household',
+            'Renters Insurance',
+        ],
+        'Essentials' => [
+            'Support',
+            'Car Loan',
+            'Auto Gas',
+            'Groceries',
+            'Koodo',
+            'Bank Fees',
+            'Medical',
+            'Pets',
+        ],
+        'Entertainment' => [
+            'Kelly',
+            'Natasha',
+            'Dining Out',
+            'Fun Money',
+        ],
+        'Subscriptions' => [
+            'Apple Services',
+            'You Need a Budget',
+            'Britbox',
+            'Crave',
+            'Paramount+',
+            'Nintendo Online',
+            'YouTube',
+            'Spotify',
+            'Twitch',
+            'Discord',
+        ],
+        'Long Term' => [
+            'Auto Insurance',
+            'Auto Maintenance',
+            'Christmas',
+            'Vacation',
+            'Emergency',
+        ],
     ];
 
     public function build(): void
@@ -71,7 +72,7 @@ final class PersonalUserStory extends Story
         $user = UserFactory::createOne([
             'email' => 'steven.bengtson@me.com',
             'name' => 'Steven Bengtson',
-            'plainPassword' => 'Pass!234'
+            'plainPassword' => 'Pass!234',
         ]);
 
         $budget = BudgetFactory::createOne([
@@ -92,33 +93,49 @@ final class PersonalUserStory extends Story
             'type' => AccountType::SAVING,
         ]);
 
-        $categoryGroups = CategoryGroupFactory::new([
-            ['owner' => $user, 'budget' => $budget]
-        ])->sequence([
-            ['name' => 'Home'],
-            ['name' => 'Essentials'],
-            ['name' => 'Entertainment'],
-            ['name' => 'Subscriptions'],
-            ['name' => 'Long Term'],
-        ])->create();
+        $this->createCategories($user, $budget);
+        PayeeFactory::createMany(25, [
+            'owner' => $user,
+            'budget' => $budget,
+            'linkCategory' => rand(0, 1) === 1 ? CategoryFactory::random() : null,
+        ]);
 
-        CategoryFactory::new([
-            ['owner' => $user, 'budget' => $budget, 'categoryGroup' => $categoryGroups[0]]
-        ])->sequence([
-            ['name' => 'Rent'],
-            ['name' => 'Telus Home'],
-            ['name' => 'FortisBC'],
-            ['name' => 'BC Hydro'],
-            ['name' => 'Sewer and Water'],
-            ['name' => 'Household'],
-            ['name' => 'Renters Insurance'],
-        ])->create();
+        TransactionFactory::createMany(500, function () use ($user, $budget, $primaryAccount) {
+            return [
+                'owner' => $user,
+                'budget' => $budget,
+                'account' => $primaryAccount,
+                'category' => CategoryFactory::random(),
+                'payee' => PayeeFactory::random()
+            ];
+        });
+
+        TransactionFactory::createMany(300, function () use ($user, $budget, $secondaryAccount) {
+            return [
+                'owner' => $user,
+                'budget' => $budget,
+                'account' => $secondaryAccount,
+                'category' => CategoryFactory::random(),
+                'payee' => PayeeFactory::random()
+            ];
+        });
     }
 
-    private function createCategories(User $user, Budget $budget): void
+    private function createCategories(User|Proxy $user, Budget|Proxy $budget): void
     {
-        foreach (self::CATEGORIES as $categoryGroup => $categories) {
+        foreach (self::CATEGORIES as $categoryGroupName => $categories) {
+            $categoryGroup = CategoryGroupFactory::createOne([
+                'owner' => $user, 'budget' => $budget, 'name' => $categoryGroupName
+            ]);
 
+            foreach ($categories as $name) {
+                CategoryFactory::createOne([
+                    'owner' => $user,
+                    'budget' => $budget,
+                    'categoryGroup' => $categoryGroup,
+                    'name' => $name,
+                ]);
+            }
         }
     }
 }

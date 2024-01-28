@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Factory\UserFactory;
+use App\Story\PersonalUserStory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -15,5 +16,7 @@ class AppFixtures extends Fixture
             'name' => 'Steven Bengtson (SA)',
             'plainPassword' => 'sup3rUs3rP@ss'
         ])->asSuperAdmin()->create();
+
+        PersonalUserStory::load();
     }
 }

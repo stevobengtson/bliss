@@ -63,9 +63,10 @@ final class PayeeFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'budget' => BudgetFactory::new(),
-            'name' => self::faker()->text(255),
             'owner' => UserFactory::new(),
+            'budget' => BudgetFactory::new(),
+            'name' => self::faker()->company(),
+            'linkCategory' => self::faker()->boolean() ? CategoryFactory::new() : null,
         ];
     }
 

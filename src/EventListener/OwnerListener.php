@@ -21,7 +21,7 @@ final class OwnerListener
     {
         $entity = $prePersistEventArgs->getObject();
 
-        if ($entity instanceof OwnedEntityInterface) {
+        if ($entity instanceof OwnedEntityInterface && $entity->getOwner() === null) {
             $this->ownerService->setOwner($entity);
         }
     }

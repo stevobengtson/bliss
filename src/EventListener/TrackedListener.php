@@ -17,8 +17,13 @@ final class TrackedListener
         $entity = $prePersistEventArgs->getObject();
 
         if ($entity instanceof TrackedEntityInterface) {
-            $entity->setCreatedAt(new \DateTimeImmutable());
-            $entity->setUpdatedAt(new \DateTimeImmutable());
+            if (null === $entity->getCreatedAt()) {
+                $entity->setCreatedAt(new \DateTimeImmutable());
+            }
+
+            if (null === $entity->getUpdatedAt()) {
+                $entity->setUpdatedAt(new \DateTimeImmutable());
+            }
         }
     }
 
@@ -27,7 +32,9 @@ final class TrackedListener
         $entity = $preUpdateEventArgs->getObject();
 
         if ($entity instanceof TrackedEntityInterface) {
-            $entity->setUpdatedAt(new \DateTimeImmutable());
+            if (null === $entity->getUpdatedAt()) {
+                $entity->setUpdatedAt(new \DateTimeImmutable());
+            }
         }
     }
 }

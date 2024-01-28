@@ -43,6 +43,7 @@
         "symfony/twig-bundle": "6.4.*",
         "symfony/uid": "6.4.*",
         "symfony/ux-autocomplete": "^2.13",
+        "symfony/ux-twig-component": "^2.13",
         "symfony/validator": "6.4.*",
         "symfony/yaml": "6.4.*",
         "twig/extra-bundle": "^2.12|^3.0",

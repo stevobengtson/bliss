@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import 'pagination.html.twig' as pager %}
 
 {% block title %}{{ account.name|capitalize ~ " transactions" }}{% endblock %}
 
@@ -45,4 +46,7 @@
         {% endfor %}
         </tbody>
     </table>
+    <div class="float-end">
+        <twig:Pagination :total="pagesCount" :path="path('app_transaction_index', { 'account_id': account.id, 'itemsPerPage': itemsPerPage, 'page': '' })" :current="page" />
+    </div>
 {% endblock %}

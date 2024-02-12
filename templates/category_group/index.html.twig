@@ -21,7 +21,6 @@
             <tr>
                 <td>{{ category_group.name }}</td>
                 <td>
-                    {% include '_show_button.html.twig' with { 'show_path': path('app_category_group_show', {'id': category_group.id})} %}
                     {% include '_edit_button.html.twig' with { 'edit_path': path('app_category_group_edit', {'id': category_group.id})} %}
                     <a class="btn btn-sm btn-outline-dark" href="{{ path('app_category_index', {'category_group_id': category_group.id}) }}">Categories</a>
                 </td>

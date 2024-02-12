@@ -34,10 +34,6 @@ class Payee implements OwnedEntityInterface
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[Groups([Group::PAYEE_READ, Group::PAYEE_CREATE, Group::PAYEE_UPDATE])]
-    #[ORM\ManyToOne]
-    private ?Category $linkCategory = null;
-
     public function getId(): ?Ulid
     {
         return $this->id;
@@ -75,18 +71,6 @@ class Payee implements OwnedEntityInterface
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getLinkCategory(): ?Category
-    {
-        return $this->linkCategory;
-    }
-
-    public function setLinkCategory(?Category $linkCategory): static
-    {
-        $this->linkCategory = $linkCategory;
 
         return $this;
     }

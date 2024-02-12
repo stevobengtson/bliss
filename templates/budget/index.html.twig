@@ -20,7 +20,6 @@
             <tr>
                 <td>{{ budget.name }}</td>
                 <td>
-                    {% include '_show_button.html.twig' with { 'show_path': path('app_budget_show', {'id': budget.id})} %}
                     {% include '_edit_button.html.twig' with { 'edit_path': path('app_budget_edit', {'id': budget.id})} %}
                     <a class="btn btn-sm btn-outline-dark" href="{{ path('app_account_index', {'budget_id': budget.id})}}">Accounts</a>
                     <a class="btn btn-sm btn-outline-dark" href="{{ path('app_category_group_index', {'budget_id': budget.id})}}">Category Groups</a>

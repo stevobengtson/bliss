@@ -66,7 +66,6 @@ final class PayeeFactory extends ModelFactory
             'owner' => UserFactory::new(),
             'budget' => BudgetFactory::new(),
             'name' => self::faker()->company(),
-            'linkCategory' => self::faker()->boolean() ? CategoryFactory::new() : null,
         ];
     }
 

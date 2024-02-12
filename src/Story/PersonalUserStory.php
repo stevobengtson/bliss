@@ -14,11 +14,12 @@ use App\Factory\TransactionFactory;
 use App\Factory\UserFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\Story;
+use function Zenstruck\Foundry\faker;
 
 final class PersonalUserStory extends Story
 {
     /**
-     * @var array<string, array{ name: string }>
+     * @var array<string, array<int, string>>
      */
     private const array CATEGORIES = [
         'Home' => [
@@ -97,7 +98,6 @@ final class PersonalUserStory extends Story
         PayeeFactory::createMany(25, [
             'owner' => $user,
             'budget' => $budget,
-            'linkCategory' => rand(0, 1) === 1 ? CategoryFactory::random() : null,
         ]);
 
         TransactionFactory::createMany(500, function () use ($user, $budget, $primaryAccount) {
@@ -106,7 +106,7 @@ final class PersonalUserStory extends Story
                 'budget' => $budget,
                 'account' => $primaryAccount,
                 'category' => CategoryFactory::random(),
-                'payee' => PayeeFactory::random()
+                'payee' => PayeeFactory::random(),
             ];
         });
 
@@ -116,16 +116,20 @@ final class PersonalUserStory extends Story
                 'budget' => $budget,
                 'account' => $secondaryAccount,
                 'category' => CategoryFactory::random(),
-                'payee' => PayeeFactory::random()
+                'payee' => PayeeFactory::random(),
             ];
         });
     }
 
+    /**
+     * @param User|Proxy<User>     $user
+     * @param Budget|Proxy<Budget> $budget
+     */
     private function createCategories(User|Proxy $user, Budget|Proxy $budget): void
     {
         foreach (self::CATEGORIES as $categoryGroupName => $categories) {
             $categoryGroup = CategoryGroupFactory::createOne([
-                'owner' => $user, 'budget' => $budget, 'name' => $categoryGroupName
+                'owner' => $user, 'budget' => $budget, 'name' => $categoryGroupName,
             ]);
 
             foreach ($categories as $name) {

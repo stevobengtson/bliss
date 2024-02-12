@@ -14,7 +14,7 @@ class AppFixtures extends Fixture
         UserFactory::new([
             'email' => 'steven.bengtson+admin@me.com',
             'name' => 'Steven Bengtson (SA)',
-            'plainPassword' => 'sup3rUs3rP@ss'
+            'plainPassword' => 'sup3rUs3rP@ss',
         ])->asSuperAdmin()->create();
 
         PersonalUserStory::load();

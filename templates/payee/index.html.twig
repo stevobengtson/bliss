@@ -13,7 +13,6 @@
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Category Link</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -21,9 +20,7 @@
         {% for payee in payees %}
             <tr>
                 <td>{{ payee.name }}</td>
-                <td>{{ payee.linkCategory ? payee.linkCategory.name : '' }}</td>
                 <td>
-                    {% include '_show_button.html.twig' with { 'show_path': path('app_payee_show', {'id': payee.id})} %}
                     {% include '_edit_button.html.twig' with { 'edit_path': path('app_payee_edit', {'id': payee.id})} %}
                 </td>
             </tr>

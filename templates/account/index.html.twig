@@ -25,7 +25,6 @@
                 <td>{{ account.balance }}</td>
                 <td>{{ account.type.value }}</td>
                 <td>
-                    {% include '_show_button.html.twig' with { 'show_path': path('app_account_show', {'id': account.id})} %}
                     {% include '_edit_button.html.twig' with { 'edit_path': path('app_account_edit', {'id': account.id})} %}
                     <a class="btn btn-sm btn-outline-dark" href="{{ path('app_transaction_index', {'account_id': account.id}) }}">Transactions</a>
                 </td>

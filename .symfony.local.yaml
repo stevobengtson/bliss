@@ -1,6 +1,6 @@
 workers:
     # auto start Docker compose when starting server (available since Symfony CLI 5.7.0)
-    # docker_compose: ~
+    docker_compose: ~
 
     # built-in command that builds and watches front-end assets
     # npm_encore_watch:

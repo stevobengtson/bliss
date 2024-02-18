@@ -1,0 +1,33 @@
+# frozen_string_literal: true
+paginator.render
+ do %>
+  <nav>
+    <ul class="pagination">
+# frozen_string_literal: true
+first_page_tag unless current_page.first?
+ %>
+# frozen_string_literal: true
+prev_page_tag unless current_page.first?
+ %>
+# frozen_string_literal: true
+each_page
+ do |page| %>
+        <% if page.left_outer? || page.right_outer? || page.inside_window? %>
+# frozen_string_literal: true
+page_tag page
+ %>
+        <% elsif !page.was_truncated? -%>
+# frozen_string_literal: true
+gap_tag
+ %>
+        <% end %>
+      <% end %>
+# frozen_string_literal: true
+next_page_tag unless current_page.last?
+ %>
+# frozen_string_literal: true
+last_page_tag unless current_page.last?
+ %>
+    </ul>
+  </nav>
+<% end %>

@@ -1,0 +1,20 @@
+# frozen_string_literal: true
+notice
+ %></p>
+
+# frozen_string_literal: true
+render @transaction
+ %>
+
+<div>
+# frozen_string_literal: true
+link_to 'Edit this transaction', edit_transaction_path(@transaction)
+ %> |
+# frozen_string_literal: true
+link_to 'Back to transactions', account_transactions_path(@transaction.account)
+ %>
+
+# frozen_string_literal: true
+button_to 'Destroy this transaction', @transaction, method: :delete
+ %>
+</div>

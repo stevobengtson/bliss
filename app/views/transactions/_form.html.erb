@@ -1,0 +1,63 @@
+# frozen_string_literal: true
+form_for [@account, transaction]
+ do |form| %>
+  <% if transaction.errors.any? %>
+    <div style="color: red">
+# frozen_string_literal: true
+pluralize(transaction.errors.count, 'error')
+ %> prohibited this transaction from being saved:</h2>
+
+      <ul>
+# frozen_string_literal: true
+transaction.errors.each
+ do |error| %>
+# frozen_string_literal: true
+error.full_message
+ %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+# frozen_string_literal: true
+form.label :memo, style: 'display: block'
+ %>
+# frozen_string_literal: true
+form.text_field :memo
+ %>
+  </div>
+
+  <div>
+# frozen_string_literal: true
+form.label :cleared, style: 'display: block'
+ %>
+# frozen_string_literal: true
+form.check_box :cleared
+ %>
+  </div>
+
+  <div>
+# frozen_string_literal: true
+form.label :amount, style: 'display: block'
+ %>
+# frozen_string_literal: true
+form.number_field :amount
+ %>
+  </div>
+
+  <div>
+# frozen_string_literal: true
+form.label :entry_date, style: 'display: block'
+ %>
+# frozen_string_literal: true
+form.datetime_field :entry_date
+ %>
+  </div>
+
+  <div>
+# frozen_string_literal: true
+form.submit
+ %>
+  </div>
+<% end %>

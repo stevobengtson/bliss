@@ -1,0 +1,16 @@
+<h1>Editing transaction</h1>
+
+# frozen_string_literal: true
+render 'form', transaction: @transaction
+ %>
+
+<br>
+
+<div>
+# frozen_string_literal: true
+link_to 'Show this transaction', @transaction
+ %> |
+# frozen_string_literal: true
+link_to 'Back to transactions', account_transactions_path(@transaction.account)
+ %>
+</div>

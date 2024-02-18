@@ -1,0 +1,22 @@
+<h1><%= @budget.name %></h1>
+<%= link_to "<Back ", budgets_path, class: " btn btn-outline-primary " %>
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+<% @accounts.each do |account| %>
+        <tr>
+<%= account.name %></td>
+            <td>
+<%= button_to " Delete ", account, method: :delete, class: " btn btn-danger " %>
+<%= link_to " Transactions ", account_transactions_path(account), class: " btn btn-primary " %>
+            </td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>
+<%= link_to " New account ", new_budget_account_path(@budget), class: " btn btn-outline-success " %>

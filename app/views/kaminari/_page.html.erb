@@ -1,0 +1,13 @@
+<% if page.current? %>
+  <li class="page-item active">
+# frozen_string_literal: true
+content_tag :a, page, data: { remote: }, rel: page.rel, class: 'page-link'
+ %>
+  </li>
+<% else %>
+  <li class="page-item">
+# frozen_string_literal: true
+link_to page, url, remote:, rel: page.rel, class: 'page-link'
+ %>
+  </li>
+<% end %>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bliss</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+  </head>
+
+  <body>
+  <div class="container-fluid">
+      <div class="row flex-nowrap">
+          <div class="col-auto col-md-3 col-lg-3 col-xl-2 col-xxl-2 px-sm-2 px-0 bg-dark">
+              <%# render "components/sidebar" %>
+          </div>
+          <div class="col py-3 container-fluid">
+              <% flash.each do |key, message| %>
+                <div class="alert <%= flash_class(key) %> alert-dismissible fade show" role="alert">
+                  <%= message %>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              <% end %>
+            <%= yield %>
+          </div>
+      </div>
+  </div>
+  </body>
+
+</html>

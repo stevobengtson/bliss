@@ -1,93 +1,80 @@
-              <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-                  <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                      <span class="fs-5 d-none d-sm-inline">Bliss</span>
-                  </a>
-                  <% if user_signed_in? %>
-                  <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-                      <li class="nav-item">
-                          <a href="#" class="nav-link align-middle px-0">
-                              <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Budget</span>
-                          </a>
-                      </li>
-                      <li>
-                          <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                              <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Accounts</span> </a>
-                          <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
-# frozen_string_literal: true
-current_user.accounts.each
- do |account| %>
-                              <li class="w-100">
-# frozen_string_literal: true
-account_transactions_path(account)
- %>" class="nav-link px-0">
-# frozen_string_literal: true
-account.name.capitalize
- %></span>
-                                </a>
-                              </li>
-                              <% end %>
-                          </ul>
-                      </li>
-                      <li>
-                          <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
-                              <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">Loans</span></a>
-                          <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
-                              <li class="w-100">
-                                  <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Car Loan BMO</span></a>
-                              </li>
-                          </ul>
-                      </li>
-                      <li>
-                          <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                              <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Tracking</span>
-                          </a>
-                          <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
-                            <li class="w-100">
-                              <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">RBC Direct Investing</span></a>
-                            </li>
-                          </ul>
-                      </li>
-                      <li>
-# frozen_string_literal: true
-new_budget_account_path(@budget)
- %>" class="nav-link px-0 align-middle">
-                              <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">+ Add Account</span>
-                          </a>
-                      </li>
-                  </ul>
-                  <% end %>
-                  <hr>
-                  <% if user_signed_in? %>
-                  <div class="dropdown pb-4">
-                      <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-# frozen_string_literal: true
-current_user.email
- %>" width="30" height="30" class="rounded-circle">
-# frozen_string_literal: true
-current_user.name
- %></span>
-                      </a>
-                      <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                          <li><a class="dropdown-item" href="#">New Budget</a></li>
-                          <li><a class="dropdown-item" href="#">Open Budget</a></li>
-                          <li>
-                              <hr class="dropdown-divider">
-                          </li>
-                          <li><a class="dropdown-item" href="#">Budget Settings</a></li>
-                          <li><a class="dropdown-item" href="#">Manage Payees</a></li>
-                          <li>
-                              <hr class="dropdown-divider">
-                          </li>
-                          <li><a class="dropdown-item" href="#">Account Settings</a></li>
-                          <li>
-                              <hr class="dropdown-divider">
-                          </li>
-                          <li><a class="dropdown-item" href="#">Sign out</a></li>
-                      </ul>
-                  </div>
-                  <% else %>
-# frozen_string_literal: true
-new_user_session_path
- %>">Sign In</a>
-                  <% end %>
-              </div>
+<div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+    <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+        <span class="fs-5 d-none d-sm-inline">Bliss</span>
+    </a>
+    <% if user_signed_in? %>
+    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+        <li class="nav-item">
+            <a href="<%= budget_path(budget) %>" class="nav-link align-middle px-0">
+                <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Budget</span>
+            </a>
+        </li>
+        <li>
+            <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Accounts</span>
+            </a>
+            <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                <% budget.accounts.each do |account| %>
+                <li class="w-100">
+                    <a href="<%= account_transactions_path(account) %>" class="nav-link px-0">
+                        <span class="ms-1 d-none d-sm-inline"><%= account.name.capitalize %><span>
+                    </a>
+                </li>
+                <% end %>
+            </ul>
+        </li>
+        <li>
+            <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
+                <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">Loans</span></a>
+            <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
+                <li class="w-100">
+                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Car Loan BMO</span></a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Tracking</span>
+            </a>
+            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
+            <li class="w-100">
+                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">RBC Direct Investing</span></a>
+            </li>
+            </ul>
+        </li>
+        <li>
+        <a href=<%= new_budget_account_path(@budget) %>" class="nav-link px-0 align-middle">
+                <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">+ Add Account</span>
+            </a>
+        </li>
+    </ul>
+    <% end %>
+    <hr>
+    <% if user_signed_in? %>
+    <div class="dropdown pb-4">
+        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="<%= avatar_url(current_user) %>" width="30" height="30" class="rounded-circle">
+        <span><%= current_user.name %></span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+            <li><a class="dropdown-item" href="<%= new_budget_path %>">New Budget</a></li>
+            <li><a class="dropdown-item" href="<%= budgets_path %>">Open Budget</a></li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="#">Budget Settings</a></li>
+            <li><a class="dropdown-item" href="#">Manage Payees</a></li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="#">Account Settings</a></li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li><%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "dropdown-item" %></li>
+        </ul>
+    </div>
+    <% else %>
+    <a href="<%= new_user_session_path %>">Sign In</a>
+    <% end %>
+</div>

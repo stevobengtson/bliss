@@ -1,12 +1,4 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Budgets</a>
-      <form class="d-flex" role="search">
-        <a href="<%= new_budget_path %>" class="btn btn-outline-success" type="submit">New Budget</a>
-      </form>
-    </div>
-  </div>
-</nav>
+<%= render partial: "components/navbar", locals: { title: "Budgets", new_item: new_budget_path, new_item_title: "New Budget" } %>
 
 <div class="mt-3">
   <div class="row row-cols-1 row-cols-md-3 rows-cols-lg-5 g-4">

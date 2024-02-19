@@ -4,6 +4,7 @@ class AccountsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_budget, only: %i[index new create]
   before_action :set_account, only: %i[destroy]
+  layout "budget_application"
 
   # GET /budgets/:budget_id/accounts or /budgets/:budget_id/accounts.json
   def index
@@ -22,7 +23,7 @@ class AccountsController < ApplicationController
 
     respond_to do |format|
       if @budget.save
-        format.html { redirect_to budget_accounts_url(@budget), notice: 'Account was successfully created.' }
+        format.html { redirect_to budget_accounts_url(@budget), notice: "Account was successfully created." }
         format.json { render :show, status: :created, location: @account }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -36,7 +37,7 @@ class AccountsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        redirect_to budget_accounts_url(@account.budget), notice: 'Account was successfully destroyed.'
+        redirect_to budget_accounts_url(@account.budget), notice: "Account was successfully destroyed."
       end
       format.json { head :no_content }
     end

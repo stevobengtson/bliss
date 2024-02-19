@@ -1,13 +1,4 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <span class="navbar-brand mb-0 h1">
-        <a href="<%= budgets_path %>" class="btn btn-sm btn-outline-secondary d-inline-block">&lt; Back</a>
-        Editing budget
-    </span>
-    </div>
-  </div>
-</nav>
-
+<%= render partial: "components/navbar", locals: { title: "Edit Budget", go_back: budgets_path } %>
 <div class="mt-5 d-flex align-items-center justify-content-center">
 <%= render "form", budget: @budget %>
 </div>

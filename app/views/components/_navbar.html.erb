@@ -1,0 +1,17 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <span class="navbar-brand mb-0 h1">
+        <% if defined?(go_back) %>
+            <a href="<%= go_back %>" class="btn btn-sm btn-outline-secondary d-inline-block me-2">&lt;</a>
+        <% end %>
+        <%= title %>
+    </span>
+
+    <% if defined?(new_item) %>
+    <form class="d-flex" role="search">
+        <a href="<%= new_item %>" class="btn btn-outline-success" type="submit"><%= new_item_title %></a>
+    </form>
+    <% end %>
+    </div>
+  </div>
+</nav>

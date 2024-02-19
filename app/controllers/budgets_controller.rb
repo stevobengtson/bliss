@@ -1,11 +1,15 @@
 class BudgetsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_budget, only: %i[show edit update destroy]
-  layout "simple", only: %i[index new edit]
+  layout "budget_application", except: %i[index new edit]
 
   # GET /budgets or /budgets.json
   def index
     @budgets = current_user.budgets.limit(30).order(name: :asc)
+  end
+
+  # GET /budgets/1 or /budgets/1.json
+  def show
   end
 
   # GET /budgets/new

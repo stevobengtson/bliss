@@ -35,8 +35,8 @@ class Account implements OwnedEntityInterface, TrackedEntityInterface
     private ?Budget $budget = null;
 
     #[Groups(Group::ACCOUNT_READ)]
-    #[ORM\Column(type: Types::BIGINT, nullable: false, options: ['default' => 0])]
-    private string $balance = '0';
+    #[ORM\Column(type: Types::DECIMAL, nullable: false, options: ['default' => 0.00])]
+    private float $balance = 0.00;
 
     #[Assert\Type(AccountType::class)]
     #[Groups([Group::ACCOUNT_READ, Group::ACCOUNT_CREATE, Group::ACCOUNT_UPDATE])]
@@ -92,12 +92,12 @@ class Account implements OwnedEntityInterface, TrackedEntityInterface
         return $this;
     }
 
-    public function getBalance(): string
+    public function getBalance(): float
     {
         return $this->balance;
     }
 
-    public function setBalance(string $balance): static
+    public function setBalance(float $balance): static
     {
         $this->balance = $balance;
 

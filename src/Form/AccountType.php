@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Account;
-use App\Enum\AccountType AS EnumAccountType;
+use App\Enum\AccountType as EnumAccountType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,9 +15,7 @@ class AccountType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('balance')
-            ->add('type', EnumType::class, ['class' => EnumAccountType::class])
-        ;
+            ->add('type', EnumType::class, ['class' => EnumAccountType::class]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

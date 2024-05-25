@@ -26,9 +26,7 @@
             <th>Category</th>
             <th>Payee</th>
             <th>Memo</th>
-            <th>Credit</th>
-            <th>Debit</th>
-            <th>RunningBalance</th>
+            <th>Amount</th>
             <th>
                 <a href="{{ path('app_transaction_index', {
                     ...app.request.query.all(),
@@ -49,9 +47,7 @@
                 <td>{{ transaction.category.name }}</td>
                 <td>{{ transaction.payee ? transaction.payee.name : '' }}</td>
                 <td>{{ transaction.memo }}</td>
-                <td>{{ transaction.credit ? (transaction.credit / 100)|format_currency('USD') : '' }}</td>
-                <td>{{ transaction.debit ? (transaction.debit / 100)|format_currency('USD') : '' }}</td>
-                <td>{{ transaction.runningBalance }}</td>
+                <td>{{ transaction.amount}}</td>
                 <td>{{ transaction.cleared ? 'Yes' : 'No' }}</td>
                 <td class="d-flex">
                     {% include '_edit_button.html.twig' with { 'edit_path': path('app_transaction_edit', {'id': transaction.id})} %}

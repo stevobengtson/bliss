@@ -40,16 +40,8 @@ class Transaction implements OwnedEntityInterface, TrackedEntityInterface
     private ?bool $cleared = null;
 
     #[Groups([Group::TRANSACTION_READ, Group::TRANSACTION_CREATE, Group::TRANSACTION_UPDATE])]
-    #[ORM\Column(type: Types::BIGINT, nullable: true)]
-    private ?string $credit = null;
-
-    #[Groups([Group::TRANSACTION_READ, Group::TRANSACTION_CREATE, Group::TRANSACTION_UPDATE])]
-    #[ORM\Column(type: Types::BIGINT, nullable: true)]
-    private ?string $debit = null;
-
-    #[Groups(Group::TRANSACTION_READ)]
-    #[ORM\Column(type: Types::BIGINT, nullable: true)]
-    private ?string $runningBalance = null;
+    #[ORM\Column(type: Types::DECIMAL, nullable: false, options: ['default' => 0.00])]
+    private float $amount = 0.00;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -125,38 +117,14 @@ class Transaction implements OwnedEntityInterface, TrackedEntityInterface
         return $this;
     }
 
-    public function getCredit(): ?string
+    public function getAmount(): float
     {
-        return $this->credit;
+        return $this->amount;
     }
 
-    public function setCredit(?string $credit): static
+    public function setAmount(float $amount): static
     {
-        $this->credit = $credit;
-
-        return $this;
-    }
-
-    public function getDebit(): ?string
-    {
-        return $this->debit;
-    }
-
-    public function setDebit(?string $debit): static
-    {
-        $this->debit = $debit;
-
-        return $this;
-    }
-
-    public function getRunningBalance(): ?string
-    {
-        return $this->runningBalance;
-    }
-
-    public function setRunningBalance(?string $runningBalance): static
-    {
-        $this->runningBalance = $runningBalance;
+        $this->amount = $amount;
 
         return $this;
     }

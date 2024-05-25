@@ -14,7 +14,6 @@ use App\Factory\TransactionFactory;
 use App\Factory\UserFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\Story;
-use function Zenstruck\Foundry\faker;
 
 final class PersonalUserStory extends Story
 {
@@ -100,6 +99,7 @@ final class PersonalUserStory extends Story
             'budget' => $budget,
         ]);
 
+        $primaryAccount->disableAutoRefresh();
         TransactionFactory::createMany(500, function () use ($user, $budget, $primaryAccount) {
             return [
                 'owner' => $user,
@@ -109,7 +109,9 @@ final class PersonalUserStory extends Story
                 'payee' => PayeeFactory::random(),
             ];
         });
+        $primaryAccount->enableAutoRefresh();
 
+        $secondaryAccount->disableAutoRefresh();
         TransactionFactory::createMany(300, function () use ($user, $budget, $secondaryAccount) {
             return [
                 'owner' => $user,
@@ -119,6 +121,7 @@ final class PersonalUserStory extends Story
                 'payee' => PayeeFactory::random(),
             ];
         });
+        $secondaryAccount->enableAutoRefresh();
     }
 
     /**

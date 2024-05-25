@@ -66,7 +66,7 @@ final class AccountFactory extends ModelFactory
         return [
             'owner' => UserFactory::new(),
             'budget' => BudgetFactory::new(),
-            'balance' => 0,
+            'balance' => 0.00,
             'name' => self::faker()->text(255),
             'type' => self::faker()->randomElement(AccountType::cases()),
             'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),

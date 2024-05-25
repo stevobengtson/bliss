@@ -4,11 +4,9 @@ namespace App\Factory;
 
 use App\Entity\Transaction;
 use App\Repository\TransactionRepository;
-use Money\Currency;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
-use Money\Money;
 
 /**
  * @extends ModelFactory<Transaction>
@@ -53,13 +51,6 @@ final class TransactionFactory extends ModelFactory
      */
     protected function getDefaults(): array
     {
-        $amount = new Money(
-            self::faker()->randomFloat(2, -9999.99, 9999.99) * 100,
-            new Currency('USD')
-        );
-
-        $zero = Money::USD(0);
-
         return [
             'owner' => UserFactory::new(),
             'budget' => BudgetFactory::new(),
@@ -68,8 +59,7 @@ final class TransactionFactory extends ModelFactory
             'payee' => PayeeFactory::new(),
             'cleared' => self::faker()->boolean(),
             'entryDate' => self::faker()->dateTime(),
-            'credit' => $amount->greaterThan($zero) ? $amount->absolute()->getAmount() : null,
-            'debit' => $amount->lessThanOrEqual($zero) ? $amount->absolute()->getAmount() : null,
+            'amount' => self::faker()->randomFloat(2, -9999.99, 9999.99) * 100,
             'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'updatedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
         ];
